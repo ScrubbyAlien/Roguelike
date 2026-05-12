@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd88fbb01ac7e62479cec25f18dac0e1, type: 3}
+  m_Name: StoneFloorOpaqueBlue
+  m_EditorClassIdentifier: 
+  sprites:
+  - sprite: {fileID: -8305803365058092108, guid: 2bb359e697d67f847a436dc07420a8bf, type: 3}
+    weight: 7
+  - sprite: {fileID: 5541110501864291823, guid: 2bb359e697d67f847a436dc07420a8bf, type: 3}
+    weight: 1
+  - sprite: {fileID: -5012251703786577423, guid: 2bb359e697d67f847a436dc07420a8bf, type: 3}
+    weight: 1
+  - sprite: {fileID: 2252217939642970804, guid: 2bb359e697d67f847a436dc07420a8bf, type: 3}
+    weight: 1
