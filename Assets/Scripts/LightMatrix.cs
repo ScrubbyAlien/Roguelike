@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
@@ -8,6 +9,8 @@ using UnityEngine.Tilemaps;
 // [CreateAssetMenu(fileName = "LightMatrix", menuName = "Light Matrix")]
 public class LightMatrix : ScriptableObject
 {
+    public event Action OnRefreshLight;
+
     [SerializeField]
     private BoundsInt worldSize;
     [SerializeField, Range(0f, 1f)]
@@ -73,10 +76,11 @@ public class LightMatrix : ScriptableObject
         foreach (Vector3Int position in worldSize.allPositionsWithin) {
             darknessMap.SetTile(position, darknessTile);
         }
+        OnRefreshLight?.Invoke();
     }
 
     public void RefreshLight() {
-        RefreshLight(darknessMap);
+        if (darknessMap) RefreshLight(darknessMap);
     }
 
     private void GenerateMatrix() {
