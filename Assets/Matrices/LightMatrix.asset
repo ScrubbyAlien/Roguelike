@@ -15,8 +15,8 @@ MonoBehaviour:
   worldSize:
     m_Position: {x: 0, y: 0, z: 0}
     m_Size: {x: 100, y: 100, z: 1}
-  dissipation: 0.7
-  cutoff: 0.6
+  dissipation: 0.8
+  cutoff: 0.65
   darknessTile: {fileID: 11400000, guid: 637991c5b6094cf41a6e07a0abd56fc8, type: 2}
   emitterTiles:
   - {fileID: 11400000, guid: efab075c0128bd44da592c38ec3d19b1, type: 2}

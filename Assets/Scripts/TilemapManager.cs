@@ -26,8 +26,8 @@ public class TilemapManager : MonoBehaviour
         }
     }
 
-    private void Awake() {
-        obstaclePositions = obstacleMatrix.ObstaclePositions(obstacleMap);
+    public void InitializeMatrices() {
+        obstaclePositions = obstacleMatrix.SetObstaclePositions(obstacleMap);
         lightMatrix.SetStaticEmitterPositions(lightMap);
         lightMatrix.RefreshLight(darknessMap);
     }
@@ -46,5 +46,10 @@ public class TilemapManager : MonoBehaviour
 
     public bool IsBlocked(Vector3Int cellPosition) {
         return obstaclePositions.Contains(cellPosition);
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.DrawWireSphere(Vector3.zero, 0.3f);
+        // Gizmos.DrawWireSphere((Vector2)designatedSize, 0.3f);
     }
 }

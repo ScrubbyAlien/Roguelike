@@ -15,7 +15,7 @@ public class ObstacleMatrix : ScriptableObject
         obstacleTiles = Resources.LoadAll<TileBase>("Obstacles");
     }
 
-    public Vector3Int[] ObstaclePositions(Tilemap map) {
+    public Vector3Int[] SetObstaclePositions(Tilemap map) {
         List<Vector3Int> obstacles = new();
         map.CompressBounds();
 
