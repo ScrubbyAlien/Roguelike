@@ -8,11 +8,11 @@ using UnityEngine.Tilemaps;
 public class ObstacleMatrix : ScriptableObject
 {
     [SerializeReference, ReadOnly]
-    private Tile[] obstacleTiles;
+    private TileBase[] obstacleTiles;
 
     [Button]
     public void RefreshObstacleTiles() {
-        obstacleTiles = Resources.LoadAll<Tile>("Obstacles");
+        obstacleTiles = Resources.LoadAll<TileBase>("Obstacles");
     }
 
     public Vector3Int[] ObstaclePositions(Tilemap map) {
@@ -22,7 +22,7 @@ public class ObstacleMatrix : ScriptableObject
         for (int x = map.cellBounds.xMin; x < map.cellBounds.xMax; x++) {
             for (int y = map.cellBounds.yMin; y < map.cellBounds.yMax; y++) {
                 Vector3Int candidatePosition = new Vector3Int(x, y, 0);
-                Tile tile = map.GetTile<Tile>(candidatePosition);
+                TileBase tile = map.GetTile<TileBase>(candidatePosition);
                 if (obstacleTiles.Contains(tile)) obstacles.Add(candidatePosition);
             }
         }

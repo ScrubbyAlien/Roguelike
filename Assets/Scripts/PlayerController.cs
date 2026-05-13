@@ -4,21 +4,27 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public static event Action PlayerConfirm;
-    public static event Action<Vector3Int> PlayerMove;
+    public event Action PlayerConfirm;
+    public event Action<Vector3Int> PlayerMove;
 
     [SerializeField]
     private TilemapAgent agent;
     [SerializeField]
     private SpriteRenderer spriteRenderer;
+    [SerializeField]
+    private LightMatrix lightMatrix;
+    private int dynamicEmitterIndex;
 
-    private void Awake() {
-        PlayerConfirm = null;
-        PlayerMove = null;
+    private InputAction move;
+    private InputAction confirm;
+
+    private void Start() {
+        dynamicEmitterIndex = lightMatrix.RegisterDynamicEmitter(agent.position);
     }
 
     private void Update() {
-        InputAction move = InputSystem.actions.FindAction("Move");
+        move = InputSystem.actions.FindAction("Move");
+        confirm = InputSystem.actions.FindAction("Confirm");
         if (move.WasPressedThisFrame()) {
             Move(move.ReadValue<Vector2>());
         }
@@ -28,12 +34,9 @@ public class PlayerController : MonoBehaviour
         SetSpriteDirection(direction.x);
 
         Vector3Int newPosition = agent.position + Vector3Int.RoundToInt((Vector3)direction);
-        if (agent.MoveToTile(newPosition)) {
-            PlayerMove?.Invoke(newPosition);
-        }
-        else {
-            PlayerMove?.Invoke(agent.position);
-        }
+        agent.MoveToTile(newPosition);
+        lightMatrix.UpdateDynamicEmitter(dynamicEmitterIndex, agent.position);
+        PlayerMove?.Invoke(agent.position);
     }
 
     public void Confirm() {

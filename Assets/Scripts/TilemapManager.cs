@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -9,13 +10,26 @@ public class TilemapManager : MonoBehaviour
     [SerializeField]
     private Vector3 offset;
     [SerializeField]
-    private Tilemap obstacleMap;
+    private Tilemap obstacleMap, lightMap, darknessMap;
     [SerializeField]
     private ObstacleMatrix obstacleMatrix;
     private Vector3Int[] obstaclePositions;
+    [SerializeField]
+    private LightMatrix lightMatrix;
 
-    private void Start() {
+    private List<TilemapAgent> players;
+
+    public void RegisterPlayer(TilemapAgent agent) {
+        if (players == null) players = new();
+        if (agent.TryGetComponent<PlayerController>(out PlayerController _)) {
+            players.Add(agent);
+        }
+    }
+
+    private void Awake() {
         obstaclePositions = obstacleMatrix.ObstaclePositions(obstacleMap);
+        lightMatrix.SetStaticEmitterPositions(lightMap);
+        lightMatrix.RefreshLight(darknessMap);
     }
 
     public Vector3Int WorldToCell(Vector3 worldPosition) {

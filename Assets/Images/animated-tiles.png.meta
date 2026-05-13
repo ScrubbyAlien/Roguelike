@@ -1533,6 +1533,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: animated-tiles_60
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 352
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22b9adab1c8a7de489b4049841743393
+      internalID: -1183613585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1604,6 +1626,7 @@ TextureImporter:
       animated-tiles_58: -946130371
       animated-tiles_59: 1083747419
       animated-tiles_6: -5519983311655423818
+      animated-tiles_60: -1183613585
       animated-tiles_7: 1279378368186839760
       animated-tiles_8: 608655420098007906
       animated-tiles_9: 1073705134348853544
