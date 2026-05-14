@@ -45,7 +45,13 @@ public class TilemapManager : MonoBehaviour
     }
 
     public bool IsBlocked(Vector3Int cellPosition) {
+        Debug.Log(obstaclePositions.Contains(cellPosition));
         return obstaclePositions.Contains(cellPosition);
+    }
+
+    public void SetTiles((TileBase obstacle, TileBase light) tiles, Vector3Int position) {
+        obstacleMap.SetTile(position, tiles.obstacle);
+        lightMap.SetTile(position, tiles.light);
     }
 
     private void OnDrawGizmos() {

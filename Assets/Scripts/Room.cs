@@ -9,13 +9,13 @@ public class Room : MonoBehaviour
     public const int maxHeight = 15;
 
     [SerializeField, Min(1)]
-    private Vector2Int sizeInGrid = Vector2Int.one;
+    public Vector2Int sizeInGrid = Vector2Int.one;
 
     [SerializeField]
     private Vector3Int[] exits;
     [SerializeField, ValidateInput("DoesNotExceedRoomBounds", "Room bounds must not exceed max size")]
     private Tilemap obstacles;
-    [SerializeField, ValidateInput("DoesNotExceedRoomBounds", "Room bounds must not exceed width 20 or height 15")]
+    [SerializeField, ValidateInput("DoesNotExceedRoomBounds", "Room bounds must not exceed max size")]
     private Tilemap lights;
 
     private void OnDrawGizmos() {
@@ -35,6 +35,12 @@ public class Room : MonoBehaviour
         if (map.cellBounds.xMax > maxWidth * sizeInGrid.x || map.cellBounds.xMin < 0) return false;
         if (map.cellBounds.yMax > maxHeight * sizeInGrid.y || map.cellBounds.xMin < 0) return false;
         return true;
+    }
+
+    public (TileBase obstacle, TileBase light) ReadTiles(Vector3Int roomPosition) {
+        TileBase obstacle = obstacles.GetTile(roomPosition);
+        TileBase light = lights.GetTile(roomPosition);
+        return (obstacle, light);
     }
 
     [Button]

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Level1
   m_EditorClassIdentifier: 
   levelSize: {x: 3, y: 3}
-  rooms: []
+  roomsResourcePath: Level1Rooms

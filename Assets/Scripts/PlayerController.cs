@@ -2,12 +2,12 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(TilemapAgent))]
 public class PlayerController : MonoBehaviour
 {
     public event Action PlayerConfirm;
     public event Action<Vector3Int> PlayerMove;
 
-    [SerializeField]
     private TilemapAgent agent;
     [SerializeField]
     private SpriteRenderer spriteRenderer;
@@ -18,8 +18,9 @@ public class PlayerController : MonoBehaviour
     private InputAction move;
     private InputAction confirm;
 
-    private void Start() {
+    public void Initialize(TilemapAgent agent) {
         dynamicEmitterIndex = lightMatrix.RegisterDynamicEmitter(agent.position);
+        this.agent = agent;
     }
 
     private void Update() {

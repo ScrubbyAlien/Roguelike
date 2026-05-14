@@ -5,19 +5,24 @@ public class TilemapAgent : MonoBehaviour
 {
     [SerializeField]
     private TilemapManager tilemapManager;
-    [SerializeField]
-    private bool isPlayer;
 
     public Vector3Int position => tilemapManager.WorldToCell(transform.position);
 
-    private void Awake() {
+    private void Start() {
         transform.position = tilemapManager.Snap(transform.position);
-        if (isPlayer) tilemapManager.RegisterPlayer(this);
+        if (TryGetComponent<PlayerController>(out PlayerController controller)) {
+            tilemapManager.RegisterPlayer(this);
+            controller.Initialize(this);
+        }
     }
 
     public bool MoveToTile(Vector3Int newPosition) {
         if (tilemapManager.IsBlocked(newPosition)) return false;
         transform.position = tilemapManager.CellToWorld(newPosition);
         return true;
+    }
+
+    public void AssignTilemapManager(TilemapManager manager) {
+        tilemapManager = manager;
     }
 }

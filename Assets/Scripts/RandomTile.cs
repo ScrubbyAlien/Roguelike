@@ -10,19 +10,17 @@ public class RandomTile : TileBase
     [SerializeField]
     private SpriteWeight[] sprites;
 
-    public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
-    {
+    public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData) {
         tileData.sprite = GetRandomWeightedSprite(position);
     }
 
-    private Sprite GetRandomWeightedSprite(Vector3Int position)
-    {
+    private Sprite GetRandomWeightedSprite(Vector3Int position) {
         Random.InitState(position.GetHashCode());
         int sum = sprites.Select(sw => sw.weight).Sum();
         int target = Random.Range(0, sum);
+        Random.InitState(System.DateTime.Now.Millisecond);
         int rollingSum = 0;
-        foreach (SpriteWeight sw in sprites)
-        {
+        foreach (SpriteWeight sw in sprites) {
             rollingSum += sw.weight;
             if (target < rollingSum) return sw.sprite;
         }

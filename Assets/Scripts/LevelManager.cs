@@ -14,8 +14,13 @@ public class LevelManager : MonoBehaviour
 
     private void Start() {
         currentLevel = startingLevel;
-        levelConfigurations[currentLevel].GenerateLevel(tilemapManager);
+        levelConfigurations[currentLevel].GenerateLevel(tilemapManager, out Vector3 spawnPosition);
         tilemapManager.InitializeMatrices();
-        // todo spawn player
+        SpawnPlayer(spawnPosition);
+    }
+
+    private void SpawnPlayer(Vector3 position) {
+        TilemapAgent spawnedPlayer = Instantiate(player, position, Quaternion.identity);
+        spawnedPlayer.AssignTilemapManager(tilemapManager);
     }
 }
