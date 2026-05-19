@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelSize: {x: 3, y: 3}
   roomsResourcePath: Level1Rooms
-  floorTile: {fileID: 11400000, guid: 9952a5c2a538e9f44a8ad27b89dec726, type: 2}
+  floorTile: {fileID: 11400000, guid: 666bb4c1b2dac9141981aeea3a801fc7, type: 2}
   wallTile: {fileID: 11400000, guid: 37d80b26fdb0f794e957aa68d9783a0c, type: 2}

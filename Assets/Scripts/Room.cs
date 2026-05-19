@@ -14,6 +14,8 @@ public class Room : MonoBehaviour
 
     [SerializeField]
     private Vector3Int[] exits;
+    [SerializeField]
+    private Vector3Int spawnPoint;
     [SerializeField, ValidateInput("DoesNotExceedRoomBounds", "Room bounds must not exceed max size")]
     private Tilemap obstacles;
     [SerializeField, ValidateInput("DoesNotExceedRoomBounds", "Room bounds must not exceed max size")]
@@ -29,6 +31,9 @@ public class Room : MonoBehaviour
         foreach (Vector3Int exit in exits) {
             Gizmos.DrawWireCube(exit + Vector3.one * 0.5f, Vector3.one);
         }
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(spawnPoint + Vector3.one * 0.5f, Vector3.one);
     }
 
     private bool DoesNotExceedRoomBounds(Tilemap map) {
@@ -45,10 +50,11 @@ public class Room : MonoBehaviour
     }
 
     [Button]
-    private void Reset() {
+    private void Clear() {
         obstacles.ClearAllTiles();
         lights.ClearAllTiles();
         exits = Array.Empty<Vector3Int>();
+        spawnPoint = Vector3Int.zero;
         sizeInGrid = Vector2Int.one;
     }
 
@@ -59,19 +65,29 @@ public class Room : MonoBehaviour
     public class RoomInstance
     {
         public Vector3Int[] exits;
+        public Vector3Int spawnPoint;
         private Vector3Int gridPosition;
         private Room roomReference;
         private HashSet<RoomInstance> connections;
 
         public RoomInstance(Vector3Int gridPosition, Room reference) {
             this.gridPosition = gridPosition;
+            Vector3Int gridPositionOffset = new Vector3Int(
+                Room.maxWidth * gridPosition.x,
+                Room.maxHeight * gridPosition.y
+            );
             roomReference = reference;
+
+            spawnPoint = reference.spawnPoint + gridPositionOffset;
+
             exits = new Vector3Int[reference.exits.Length];
             Array.Copy(reference.exits, exits, reference.exits.Length);
+
             // set absolute exit positions;
             for (int i = 0; i < exits.Length; i++) {
-                exits[i] += new Vector3Int(Room.maxWidth * gridPosition.x, Room.maxHeight * gridPosition.y);
+                exits[i] += gridPositionOffset;
             }
+
             connections = new();
         }
 

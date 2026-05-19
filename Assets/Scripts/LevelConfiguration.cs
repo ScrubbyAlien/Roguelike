@@ -16,8 +16,8 @@ public class LevelConfiguration : ScriptableObject
     public void GenerateLevel(TilemapManager tilemapManager, out Vector3 spawnPosition) {
         rooms = Resources.LoadAll<Room>(roomsResourcePath);
         LevelGenerator levelGenerator = new LevelGenerator(rooms, tilemapManager, levelSize, floorTile, wallTile);
-        levelGenerator.RandomizeRooms();
+        levelGenerator.RandomizeRooms(out Vector3Int spawnPoint);
         levelGenerator.RandomizePath();
-        spawnPosition = new Vector3(10, 6, 0);
+        spawnPosition = (Vector3)spawnPoint;
     }
 }

@@ -754,6 +754,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0d4a6aa908975b04098b664c33e0887e, type: 2}
   player: {fileID: 1969858597929189449, guid: 006ad22698bcbee4d8c978424ca2f4c7, type: 3}
   tilemapManager: {fileID: 1402745942}
+  cameraController: {fileID: 1608854429}
 --- !u!4 &689091527
 Transform:
   m_ObjectHideFlags: 0
@@ -1158,6 +1159,7 @@ GameObject:
   - component: {fileID: 1608854424}
   - component: {fileID: 1608854428}
   - component: {fileID: 1608854427}
+  - component: {fileID: 1608854429}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1307,6 +1309,18 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &1608854429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1608854423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae61d85169662e94d8b325b007ecfdd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

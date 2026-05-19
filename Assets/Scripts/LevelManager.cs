@@ -12,6 +12,8 @@ public class LevelManager : MonoBehaviour
     private TilemapAgent player;
     [SerializeField]
     private TilemapManager tilemapManager;
+    [SerializeField]
+    private CameraController cameraController;
 
     private void Start() {
         currentLevel = startingLevel;
@@ -23,5 +25,6 @@ public class LevelManager : MonoBehaviour
     private void SpawnPlayer(Vector3 position) {
         TilemapAgent spawnedPlayer = Instantiate(player, position, Quaternion.identity);
         spawnedPlayer.AssignTilemapManager(tilemapManager);
+        cameraController.Initialize(spawnedPlayer.GetComponent<PlayerController>());
     }
 }

@@ -26,7 +26,7 @@ public class LevelGenerator
         this.wallTile = wallTile;
     }
 
-    public void RandomizeRooms() {
+    public void RandomizeRooms(out Vector3Int spawnPoint) {
         roomMatrix = new Room.RoomInstance[levelSize.x, levelSize.y];
         for (int i = 0; i < roomMatrix.GetLength(0); i++) {
             for (int j = 0; j < roomMatrix.GetLength(1); j++) {
@@ -52,10 +52,13 @@ public class LevelGenerator
                 }
             }
         }
+
+        spawnPoint = roomMatrix[0, 0].spawnPoint;
     }
 
     public void RandomizePath() {
         ConnectRooms(roomMatrix[0, 0], roomMatrix[0, 1]);
+        ConnectRooms(roomMatrix[0, 1], roomMatrix[0, 2]);
     }
 
     public void AddSuperfluousPaths() { }

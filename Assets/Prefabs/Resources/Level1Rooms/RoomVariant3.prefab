@@ -69,6 +69,7 @@ MonoBehaviour:
   - {x: 1, y: 9, z: 0}
   - {x: 6, y: 6, z: 0}
   - {x: 38, y: 11, z: 0}
+  spawnPoint: {x: 5, y: 9, z: 0}
   obstacles: {fileID: 1304395926548180109}
   lights: {fileID: 3521618792497774062}
 --- !u!1 &1360834470096255884

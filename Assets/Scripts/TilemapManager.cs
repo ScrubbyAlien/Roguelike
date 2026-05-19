@@ -52,7 +52,6 @@ public class TilemapManager : MonoBehaviour
     }
 
     public bool IsBlocked(Vector3Int cellPosition) {
-        Debug.Log(obstaclePositions.Contains(cellPosition));
         return obstaclePositions.Contains(cellPosition);
     }
 
@@ -133,7 +132,6 @@ public class TilemapManager : MonoBehaviour
                 }
                 pathToNeighbour[pathToNext.Length] = neighbour;
 
-                Debug.Log($"{next} {neighbour}");
                 frontier.Add(neighbour, pathToNeighbour);
             }
 
