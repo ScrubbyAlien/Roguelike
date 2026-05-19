@@ -1,18 +1,29 @@
+using System;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class LevelGenerator
 {
     private Room[] rooms;
     private TilemapManager tilemapManager;
     private Vector2Int levelSize;
+    private TileBase floorTile;
+    private TileBase wallTile;
 
     private Room.RoomInstance[,] roomMatrix;
 
-    public LevelGenerator(Room[] rooms, TilemapManager tilemapManager, Vector2Int levelSize) {
+    public LevelGenerator(Room[] rooms,
+                          TilemapManager tilemapManager,
+                          Vector2Int levelSize,
+                          TileBase floorTile,
+                          TileBase wallTile) {
         this.rooms = rooms;
         this.tilemapManager = tilemapManager;
         this.levelSize = levelSize;
+        this.floorTile = floorTile;
+        this.wallTile = wallTile;
     }
 
     public void RandomizeRooms() {
@@ -43,7 +54,9 @@ public class LevelGenerator
         }
     }
 
-    public void RandomizePath() { }
+    public void RandomizePath() {
+        ConnectRooms(roomMatrix[0, 0], roomMatrix[0, 1]);
+    }
 
     public void AddSuperfluousPaths() { }
 
@@ -55,7 +68,30 @@ public class LevelGenerator
 
     public void PlaceLoot() { }
 
-    private void ConnectRooms(Room room1, Room room2, Vector2Int position1, Vector2Int position2, Tilemap tilemap) { }
+    private void ConnectRooms(Room.RoomInstance room1, Room.RoomInstance room2) {
+        if (room1.ConnectsTo(room2)) return;
+
+        int shortestDistance = int.MaxValue;
+        Vector3Int exit1 = default;
+        Vector3Int exit2 = default;
+
+        foreach (Vector3Int room1Exit in room1.exits) {
+            foreach (Vector3Int room2Exit in room2.exits) {
+                int candidateDistance = room1Exit.TaxiDistanceTo(room2Exit);
+                if (candidateDistance < shortestDistance) {
+                    shortestDistance = candidateDistance;
+                    exit1 = room1Exit;
+                    exit2 = room2Exit;
+                }
+            }
+        }
+
+        TilemapManager.Path path = new();
+        tilemapManager.FindPath(exit1, exit2, ref path, true);
+
+        Room.RoomInstance.Connect(room1, room2);
+        tilemapManager.DrawConnectingPath(path, floorTile, wallTile);
+    }
 
     private Room GetRandomRoom(Vector2Int maxSize) {
         Vector2Int roomSize = Vector2Int.zero;
@@ -67,5 +103,4 @@ public class LevelGenerator
         } while (roomSize.x > maxSize.x || roomSize.y > maxSize.y);
         return randomRoom;
     }
-
 }

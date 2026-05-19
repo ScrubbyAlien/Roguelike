@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -57,9 +58,10 @@ public class Room : MonoBehaviour
 
     public class RoomInstance
     {
-        private Vector3Int[] exits;
+        public Vector3Int[] exits;
         private Vector3Int gridPosition;
         private Room roomReference;
+        private HashSet<RoomInstance> connections;
 
         public RoomInstance(Vector3Int gridPosition, Room reference) {
             this.gridPosition = gridPosition;
@@ -68,8 +70,9 @@ public class Room : MonoBehaviour
             Array.Copy(reference.exits, exits, reference.exits.Length);
             // set absolute exit positions;
             for (int i = 0; i < exits.Length; i++) {
-                exits[i] += gridPosition;
+                exits[i] += new Vector3Int(Room.maxWidth * gridPosition.x, Room.maxHeight * gridPosition.y);
             }
+            connections = new();
         }
 
         public void PlaceInTileMap(TilemapManager tilemapManager) {
@@ -90,6 +93,15 @@ public class Room : MonoBehaviour
             TileBase obstacle = roomReference.obstacles.GetTile(relativeToRoomPosition);
             TileBase light = roomReference.lights.GetTile(relativeToRoomPosition);
             return (obstacle, light);
+        }
+
+        public bool ConnectsTo(RoomInstance to) {
+            return connections.Contains(to);
+        }
+
+        public static void Connect(RoomInstance instance1, RoomInstance instance2) {
+            instance1.connections.Add(instance2);
+            instance2.connections.Add(instance1);
         }
     }
 }
