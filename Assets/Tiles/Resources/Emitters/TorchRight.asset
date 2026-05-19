@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: TorchRight
+  m_EditorClassIdentifier: 
+  m_AnimatedSprites:
+  - {fileID: 6963941616572742015, guid: f5a1a2a405a37804da142e5addddb9ce, type: 3}
+  - {fileID: 4838559821932360899, guid: f5a1a2a405a37804da142e5addddb9ce, type: 3}
+  - {fileID: 8522913149641415315, guid: f5a1a2a405a37804da142e5addddb9ce, type: 3}
+  - {fileID: -3535949300033588332, guid: f5a1a2a405a37804da142e5addddb9ce, type: 3}
+  - {fileID: -3736852490660826426, guid: f5a1a2a405a37804da142e5addddb9ce, type: 3}
+  - {fileID: 982417568549858740, guid: f5a1a2a405a37804da142e5addddb9ce, type: 3}
+  m_MinSpeed: 1
+  m_MaxSpeed: 1
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 16

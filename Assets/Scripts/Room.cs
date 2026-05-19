@@ -50,4 +50,46 @@ public class Room : MonoBehaviour
         exits = Array.Empty<Vector3Int>();
         sizeInGrid = Vector2Int.one;
     }
+
+    public RoomInstance CreateInstance(Vector3Int gridPosition) {
+        return new RoomInstance(gridPosition, this);
+    }
+
+    public class RoomInstance
+    {
+        private Vector3Int[] exits;
+        private Vector3Int gridPosition;
+        private Room roomReference;
+
+        public RoomInstance(Vector3Int gridPosition, Room reference) {
+            this.gridPosition = gridPosition;
+            roomReference = reference;
+            exits = new Vector3Int[reference.exits.Length];
+            Array.Copy(reference.exits, exits, reference.exits.Length);
+            // set absolute exit positions;
+            for (int i = 0; i < exits.Length; i++) {
+                exits[i] += gridPosition;
+            }
+        }
+
+        public void PlaceInTileMap(TilemapManager tilemapManager) {
+            for (int x = 0; x < Room.maxWidth * roomReference.sizeInGrid.x; x++) {
+                for (int y = 0; y < Room.maxHeight * roomReference.sizeInGrid.y; y++) {
+                    Vector3Int roomPosition = new Vector3Int(x, y, 0);
+                    Vector3Int levelPosition = new Vector3Int(
+                        gridPosition.x * Room.maxWidth + x,
+                        gridPosition.y * Room.maxHeight + y,
+                        0
+                    );
+                    tilemapManager.SetTiles(ReadTiles(roomPosition), levelPosition);
+                }
+            }
+        }
+
+        public (TileBase obstacle, TileBase light) ReadTiles(Vector3Int relativeToRoomPosition) {
+            TileBase obstacle = roomReference.obstacles.GetTile(relativeToRoomPosition);
+            TileBase light = roomReference.lights.GetTile(relativeToRoomPosition);
+            return (obstacle, light);
+        }
+    }
 }

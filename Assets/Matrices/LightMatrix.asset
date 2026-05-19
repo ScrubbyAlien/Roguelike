@@ -20,4 +20,5 @@ MonoBehaviour:
   darknessTile: {fileID: 11400000, guid: 637991c5b6094cf41a6e07a0abd56fc8, type: 2}
   emitterTiles:
   - {fileID: 11400000, guid: efab075c0128bd44da592c38ec3d19b1, type: 2}
+  - {fileID: 11400000, guid: 9eaa1dae85042364da28345bc556a059, type: 2}
   - {fileID: 11400000, guid: 3127fc90e61465b4497001d7e5ee91fc, type: 2}
