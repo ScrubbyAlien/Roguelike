@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
     private InputAction move;
     private InputAction confirm;
 
+    public Vector3Int position => agent.position;
+
     public void Initialize(TilemapAgent agent) {
         dynamicEmitterIndex = lightMatrix.RegisterDynamicEmitter(agent.position);
         this.agent = agent;

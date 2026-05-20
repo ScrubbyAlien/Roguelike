@@ -64,9 +64,9 @@ public class Room : MonoBehaviour
 
     public class RoomInstance
     {
-        public Vector3Int[] exits;
-        public Vector3Int spawnPoint;
-        private Vector3Int gridPosition;
+        public readonly Vector3Int[] exits;
+        public readonly Vector3Int spawnPoint;
+        public readonly Vector3Int gridPosition;
         private Room roomReference;
         private HashSet<RoomInstance> connections;
 

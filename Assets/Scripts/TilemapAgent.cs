@@ -10,10 +10,6 @@ public class TilemapAgent : MonoBehaviour
 
     private void Start() {
         transform.position = tilemapManager.Snap(transform.position);
-        if (TryGetComponent<PlayerController>(out PlayerController controller)) {
-            tilemapManager.RegisterPlayer(this);
-            controller.Initialize(this);
-        }
     }
 
     public bool MoveToTile(Vector3Int newPosition) {
@@ -24,5 +20,6 @@ public class TilemapAgent : MonoBehaviour
 
     public void AssignTilemapManager(TilemapManager manager) {
         tilemapManager = manager;
+        transform.position = tilemapManager.Snap(transform.position);
     }
 }

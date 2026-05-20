@@ -65,6 +65,10 @@ public class TilemapManager : MonoBehaviour
     }
 
     public void DrawConnectingPath(Path connectingPath, TileBase floor, TileBase wall) {
+        if (!connectingPath.valid) {
+            Debug.LogError("Attempting to draw invalid path");
+            return;
+        }
         for (int i = 0; i < connectingPath.Length; i++) {
             switch (connectingPath.GetPathTile(i, out Vector3Int tile, out Vector3Int from, out Vector3Int to)) {
                 case Path.PathTileType.Middle:
@@ -92,7 +96,7 @@ public class TilemapManager : MonoBehaviour
         else return new[] { tile - relFrom, tile - relTo, tile - sum };
     }
 
-    public bool FindPath(Vector3Int from, Vector3Int to, ref Path path, bool connectRooms = false) {
+    public bool FindPath(Vector3Int from, Vector3Int to, ref Path path, BoundsInt bounds, bool connectRooms = false) {
         Dictionary<Vector3Int, Vector3Int[]> frontier = new(); // key: tile, value: path to tile
         HashSet<Vector3Int> vistited = new();
 
@@ -123,6 +127,7 @@ public class TilemapManager : MonoBehaviour
             // relax tile
             foreach (Vector3Int neighbour in next.Neighbours()) {
                 if (vistited.Contains(neighbour) || frontier.ContainsKey(neighbour)) continue;
+                else if (!bounds.Contains(neighbour)) continue;
                 else if (connectRooms && neighbour != to && ReadObstacleTile(neighbour)) continue;
                 else if (!connectRooms && IsBlocked(neighbour)) continue;
 

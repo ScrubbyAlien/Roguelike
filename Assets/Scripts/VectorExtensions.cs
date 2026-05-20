@@ -10,6 +10,13 @@ public static class VectorExtensions
         yield return origin + new Vector3Int(0, -1, 0);
     }
 
+    public static IEnumerable<Vector2Int> Neighbours(this Vector2Int origin) {
+        yield return origin + new Vector2Int(1, 0);
+        yield return origin + new Vector2Int(0, 1);
+        yield return origin + new Vector2Int(-1, 0);
+        yield return origin + new Vector2Int(0, -1);
+    }
+
     public static bool IsNeighbourWith(this Vector3Int origin, Vector3Int candidate) {
         return origin.TaxiDistanceTo(candidate) == 1;
     }

@@ -24,7 +24,12 @@ public class LevelManager : MonoBehaviour
 
     private void SpawnPlayer(Vector3 position) {
         TilemapAgent spawnedPlayer = Instantiate(player, position, Quaternion.identity);
+        PlayerController controller = spawnedPlayer.GetComponent<PlayerController>();
+
         spawnedPlayer.AssignTilemapManager(tilemapManager);
-        cameraController.Initialize(spawnedPlayer.GetComponent<PlayerController>());
+        tilemapManager.RegisterPlayer(spawnedPlayer);
+
+        controller.Initialize(spawnedPlayer);
+        cameraController.Initialize(controller);
     }
 }

@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour
     public void Initialize(PlayerController playerController) {
         offset = transform.position;
         playerController.PlayerMove += SetCameraPosition;
+        SetCameraPosition(playerController.position);
     }
 
     private void SetCameraPosition(Vector3Int playerPosition) {
