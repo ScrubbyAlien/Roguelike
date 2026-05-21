@@ -26,6 +26,12 @@ public class TilemapManager : MonoBehaviour
         // Gizmos.DrawWireSphere((Vector2)designatedSize, 0.3f);
     }
 
+    public void ClearAllTilemaps() {
+        obstacleMap.ClearAllTiles();
+        lightMap.ClearAllTiles();
+        darknessMap.ClearAllTiles();
+    }
+
     public void RegisterPlayer(TilemapAgent agent) {
         if (players == null) players = new();
         if (agent.TryGetComponent<PlayerController>(out PlayerController _)) {
@@ -137,7 +143,9 @@ public class TilemapManager : MonoBehaviour
                 }
                 pathToNeighbour[pathToNext.Length] = neighbour;
 
-                frontier.Add(neighbour, pathToNeighbour);
+                if (pathToNeighbour.Length <= path.maxLength) {
+                    frontier.Add(neighbour, pathToNeighbour);
+                }
             }
 
             frontier.Remove(next);
@@ -151,9 +159,14 @@ public class TilemapManager : MonoBehaviour
     // a path that connects two non obstacle tiles
     public class Path
     {
+        public readonly int maxLength;
         private Vector3Int[] tiles;
         public int Length => tiles.Length;
         public bool valid => tiles != null;
+
+        public Path(int maxLength = int.MaxValue) {
+            this.maxLength = maxLength;
+        }
 
         public void CopyPath(Path other) {
             if (other.valid) {
@@ -164,7 +177,7 @@ public class TilemapManager : MonoBehaviour
         }
 
         public bool SetTiles(Vector3Int[] tiles) {
-            if (tiles == null) {
+            if (tiles == null || tiles.Length > maxLength) {
                 this.tiles = null;
                 return false;
             }

@@ -37,7 +37,11 @@ public class PlayerController : MonoBehaviour
         SetSpriteDirection(direction.x);
 
         Vector3Int newPosition = agent.position + Vector3Int.RoundToInt((Vector3)direction);
-        agent.MoveToTile(newPosition);
+        Warp(newPosition);
+    }
+
+    public void Warp(Vector3Int position) {
+        agent.MoveToTile(position);
         lightMatrix.UpdateDynamicEmitter(dynamicEmitterIndex, agent.position);
         PlayerMove?.Invoke(agent.position);
     }

@@ -9,6 +9,8 @@ public class LevelConfiguration : ScriptableObject
     private Vector2Int levelSize;
     [SerializeField]
     private int length;
+    [SerializeField, Range(0f, 1f)]
+    private float complexity;
     [SerializeField]
     private string roomsResourcePath;
     [SerializeField]
@@ -21,6 +23,8 @@ public class LevelConfiguration : ScriptableObject
 
         levelGenerator.RandomizeRooms(rooms, out Vector3Int spawnPoint);
         levelGenerator.RandomizePath(length, floorTile, wallTile);
+        levelGenerator.AddSuperfluousPaths(complexity, floorTile, wallTile);
+        levelGenerator.TrimUnreachableRooms();
 
         spawnPosition = (Vector3)spawnPoint;
     }

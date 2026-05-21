@@ -13,13 +13,19 @@ public class LevelGenerator
     private BoundsInt levelBounds;
 
     private Room.RoomInstance[,] roomMatrix;
+    private Vector2Int[] mainPath;
     private Vector2Int startRoomPosition;
     private Room.RoomInstance startRoom => roomMatrix[startRoomPosition.x, startRoomPosition.y];
 
+    private const int searchBoundsOffset = 10;
+    private const int connectingPathMaxLength = 30;
+
     public LevelGenerator(TilemapManager tilemapManager, Vector2Int levelSize) {
         this.tilemapManager = tilemapManager;
+        // level size cannot be zero in any direction due to division in superfluous paths
+        Assert.IsTrue(levelSize.x > 0 && levelSize.y > 0);
         this.levelSize = levelSize;
-        this.levelBounds = new BoundsInt(0, 0, 0, levelSize.x - 1, levelSize.y - 1, 1);
+        this.levelBounds = new BoundsInt(0, 0, 0, levelSize.x, levelSize.y, 1);
         roomMatrix = new Room.RoomInstance[levelSize.x, levelSize.y];
     }
 
@@ -55,7 +61,7 @@ public class LevelGenerator
 
     public void RandomizePath(int length, TileBase floor, TileBase wall) {
         Assert.IsTrue(length > 1); // end room cannot be in starting room
-        Vector2Int[] mainPath = new Vector2Int[length];
+        mainPath = new Vector2Int[length];
         mainPath[0] = startRoomPosition;
         for (int i = 0; i < length - 1; i++) {
             Vector2Int[] neighbours = mainPath[i].Neighbours().Where(
@@ -69,31 +75,74 @@ public class LevelGenerator
 
         for (int i = 1; i < length; i++) {
             (Vector2Int room1Pos, Vector2Int room2Pos) = (mainPath[i - 1], mainPath[i]);
-            Room.RoomInstance room1 = roomMatrix[room1Pos.x, room1Pos.y];
-            Room.RoomInstance room2 = roomMatrix[room2Pos.x, room2Pos.y];
-
-            ConnectRooms(room1, room2, floor, wall);
+            ConnectRooms(room1Pos, room2Pos, floor, wall);
         }
     }
 
-    public void AddSuperfluousPaths() { }
+    public void AddSuperfluousPaths(float complexity, TileBase floor, TileBase wall) {
+        List<Vector2Int> connectedRooms = mainPath.ToList();
+        float levelArea = levelSize.x * levelSize.y;
+        if ((connectedRooms.Count + 1) / levelArea > complexity) return;
 
-    public void TrimUnreachableRooms() { }
+        List<Vector2Int> neighbours = new();
+
+        Action<Vector2Int> addNeighbours = room => {
+            foreach (Vector2Int neighbour in room.Neighbours()) {
+                if (!levelBounds.Contains((Vector3Int)neighbour)) continue;
+                if (connectedRooms.Contains(neighbour)) continue;
+                if (neighbours.Contains(neighbour)) continue;
+                neighbours.Add(neighbour);
+            }
+        };
+
+        foreach (Vector2Int room in connectedRooms) {
+            addNeighbours(room);
+        }
+
+        // stop if adding another room surpasses complexity
+        while ((connectedRooms.Count + 1) / levelArea < complexity) {
+            if (neighbours.Count == 0) break;
+            int randomIndex = Random.Range(0, neighbours.Count);
+            Vector2Int roomToConnect = neighbours[randomIndex];
+            Vector2Int connected = roomToConnect.Neighbours().Where(n => connectedRooms.Contains(n)).First();
+
+            addNeighbours(roomToConnect);
+            neighbours.Remove(roomToConnect);
+            connectedRooms.Add(roomToConnect);
+
+            ConnectRooms(roomToConnect, connected, floor, wall);
+        }
+    }
+
+    public void TrimUnreachableRooms() {
+        for (int x = 0; x < roomMatrix.GetLength(0); x++) {
+            for (int y = 0; y < roomMatrix.GetLength(1); y++) {
+                Room.RoomInstance room = roomMatrix[x, y];
+                if (!room.IsConnected()) room.ClearFromTileMap(tilemapManager);
+            }
+        }
+    }
 
     public void PlaceEnemies() { }
 
     public void PlaceLoot() { }
 
-    private void ConnectRooms(Room.RoomInstance room1, Room.RoomInstance room2, TileBase floor, TileBase wall) {
-        if (room1 == room2) return;
-        if (room1.ConnectsTo(room2)) return;
+    private bool ConnectRooms(Vector2Int room1Pos, Vector2Int room2Pos, TileBase floor, TileBase wall) {
+        Room.RoomInstance room1 = roomMatrix[room1Pos.x, room1Pos.y];
+        Room.RoomInstance room2 = roomMatrix[room2Pos.x, room2Pos.y];
+        return ConnectRooms(room1, room2, floor, wall);
+    }
 
-        TilemapManager.Path shortestPath = new();
-        TilemapManager.Path candidatePath = new();
+    private bool ConnectRooms(Room.RoomInstance room1, Room.RoomInstance room2, TileBase floor, TileBase wall) {
+        if (room1 == room2) return true;
+        if (room1.ConnectsTo(room2)) return true;
+
+        TilemapManager.Path shortestPath = new(connectingPathMaxLength);
+        TilemapManager.Path candidatePath = new(connectingPathMaxLength);
 
         BoundsInt searchBounds = new BoundsInt(
-            -3, -3, 0,
-            levelSize.x * Room.maxWidth + 3, levelSize.y * Room.maxHeight + 3, 1
+            -searchBoundsOffset, -searchBoundsOffset, 0,
+            levelSize.x * Room.maxWidth + searchBoundsOffset, levelSize.y * Room.maxHeight + searchBoundsOffset, 1
         );
 
         foreach (Vector3Int room1Exit in room1.exits) {
@@ -106,8 +155,11 @@ public class LevelGenerator
             }
         }
 
+        if (!shortestPath.valid) return false;
+
         Room.RoomInstance.Connect(room1, room2);
         tilemapManager.DrawConnectingPath(shortestPath, floor, wall);
+        return true;
     }
 
     private Room GetRandomRoom(Room[] rooms, Vector2Int maxSize) {

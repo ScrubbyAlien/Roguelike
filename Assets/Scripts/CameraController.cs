@@ -14,8 +14,8 @@ public class CameraController : MonoBehaviour
         SetCameraPosition(playerController.position);
     }
 
-    private void SetCameraPosition(Vector3Int playerPosition) {
-        Vector3Int gridCell = new Vector3Int(playerPosition.x / Room.maxWidth, playerPosition.y / Room.maxHeight);
+    public void SetCameraPosition(Vector3Int position) {
+        Vector3Int gridCell = new Vector3Int(position.x / Room.maxWidth, position.y / Room.maxHeight);
         Vector3 gridPositionOffset = new Vector3(
             Room.maxWidth * gridCell.x,
             Room.maxHeight * gridCell.y

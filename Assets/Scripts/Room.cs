@@ -70,6 +70,8 @@ public class Room : MonoBehaviour
         private Room roomReference;
         private HashSet<RoomInstance> connections;
 
+        private bool exists;
+
         public RoomInstance(Vector3Int gridPosition, Room reference) {
             this.gridPosition = gridPosition;
             Vector3Int gridPositionOffset = new Vector3Int(
@@ -89,9 +91,11 @@ public class Room : MonoBehaviour
             }
 
             connections = new();
+
+            exists = false;
         }
 
-        public void PlaceInTileMap(TilemapManager tilemapManager) {
+        private IEnumerable<(Vector3Int, Vector3Int)> AllPositions() {
             for (int x = 0; x < Room.maxWidth * roomReference.sizeInGrid.x; x++) {
                 for (int y = 0; y < Room.maxHeight * roomReference.sizeInGrid.y; y++) {
                     Vector3Int roomPosition = new Vector3Int(x, y, 0);
@@ -100,9 +104,27 @@ public class Room : MonoBehaviour
                         gridPosition.y * Room.maxHeight + y,
                         0
                     );
-                    tilemapManager.SetTiles(ReadTiles(roomPosition), levelPosition);
+                    yield return (roomPosition, levelPosition);
                 }
             }
+        }
+
+        public void PlaceInTileMap(TilemapManager tilemapManager) {
+            if (exists) return;
+            foreach ((Vector3Int roomPosition, Vector3Int levelPosition) in AllPositions()) {
+                tilemapManager.SetTiles(ReadTiles(roomPosition), levelPosition);
+            }
+            exists = true;
+        }
+
+        public void ClearFromTileMap(TilemapManager tilemapManager) {
+            if (!exists) return;
+            foreach ((Vector3Int roomPosition, Vector3Int levelPosition) in AllPositions()) {
+                if (roomReference.obstacles.GetTile(roomPosition) || roomReference.lights.GetTile(roomPosition)) {
+                    tilemapManager.SetTiles((null, null), levelPosition);
+                }
+            }
+            exists = false;
         }
 
         public (TileBase obstacle, TileBase light) ReadTiles(Vector3Int relativeToRoomPosition) {
@@ -113,6 +135,10 @@ public class Room : MonoBehaviour
 
         public bool ConnectsTo(RoomInstance to) {
             return connections.Contains(to);
+        }
+
+        public bool IsConnected() {
+            return connections.Count > 0;
         }
 
         public static void Connect(RoomInstance instance1, RoomInstance instance2) {
