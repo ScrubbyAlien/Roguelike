@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -69,8 +70,22 @@ public class AttackManager : ScriptableObject
         attacks.RemoveAll(a => a.delay <= 0);
     }
 
-    // public bool GetAttackString(Vector3Int tile, out string attackString) {
-    // }
+    public bool TileUnderThreat(Vector3Int position) {
+        return attacks.Where(a => a.targetTile == position).Any();
+    }
+
+    public bool GetAttackString(Vector3Int position, out string attackString) {
+        Attack[] attackOnTile = attacks.Where(a => a.targetTile == position).ToArray();
+        attackString = "";
+        if (attackOnTile.Length > 0) {
+            attackString = attackOnTile[0].delay switch {
+                > 1 => $"Will be attacked by {attackOnTile[0].enemyInstance.name} in {attackOnTile[0].delay} turns",
+                <= 1 => $"Will be attacked by {attackOnTile[0].enemyInstance.name} next turn"
+            };
+            return true;
+        }
+        else return false;
+    }
 
     private class Attack
     {

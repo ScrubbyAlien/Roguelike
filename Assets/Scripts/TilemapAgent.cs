@@ -33,7 +33,7 @@ public class TilemapAgent : MonoBehaviour
         return room == tilemapManager.RoomOf(position);
     }
 
-    public bool FindPath(Vector3Int target, BoundsInt bounds, ref TilemapManager.Path path, bool log) {
+    public bool FindPath(Vector3Int target, BoundsInt bounds, ref TilemapManager.Path path, bool log = false) {
         return tilemapManager.FindPath(position, target, ref path, bounds, false, log);
     }
 }

@@ -31,11 +31,9 @@ public class EnemyDefinition : ScriptableObject
         AttackManager attackManager
     ) {
         instance.turnsToTake += turnsPerPlayerTurn;
-        if (controller.logActions) Debug.Log($"turns to take: {instance.turnsToTake}");
         while (instance.turnsToTake >= 1) {
             TurnBehaviour(controller, instance, playerPosition, attackManager);
             instance.turnsToTake -= 1;
-            if (controller.logActions) Debug.Log($"turn taken. {instance.turnsToTake} turns left");
         }
     }
 
@@ -45,23 +43,17 @@ public class EnemyDefinition : ScriptableObject
         Vector3Int playerPosition,
         AttackManager attackManager
     ) {
-        if (controller.logActions) Debug.Log($"executing behaviour: {behaviour}");
         switch (behaviour) {
             case EnemyBehaviour.Melee:
-                if (controller.logActions) {
-                    Debug.Log($"waiting: {instance.waitingForAttack}, attack performed {instance.attackPerformed}");
-                }
                 if (instance.waitingForAttack) return;
                 if (instance.attackPerformed) {
                     instance.attackPerformed = false;
                     return;
                 }
                 if (!controller.agent.InSameRoom(playerPosition)) return;
-                if (controller.logActions) Debug.Log("in same room");
                 if (!controller.FindPath(playerPosition)) return;
-                if (controller.logActions) Debug.Log("path to player found");
                 if (playerPosition.IsNeighbourWith(controller.agent.position)) {
-                    if (controller.logActions) Debug.Log("is neighbour to player, start attack");
+                    if (attackManager.TileUnderThreat(playerPosition)) return;
                     instance.waitingForAttack = true;
                     attackManager.StartAttack(
                         playerPosition, instance.damage, attackDelay, instance,
@@ -72,7 +64,6 @@ public class EnemyDefinition : ScriptableObject
                     );
                     return;
                 }
-                if (controller.logActions) Debug.Log("not neighbour, move toward player");
                 controller.Move(controller.enemyPath.GetPathTile(1));
                 break;
             case EnemyBehaviour.Ranged:
@@ -86,7 +77,7 @@ public class EnemyDefinition : ScriptableObject
 
     public class EnemyInstance
     {
-        private string name;
+        public string name;
         public float currentHitPoints;
         public float damage;
         public float turnsToTake;

@@ -18,8 +18,8 @@ public class EnemyController : MonoBehaviour
 
     public TilemapManager.Path enemyPath;
 
-    [SerializeField]
-    public bool logActions;
+    // [SerializeField]
+    // public bool logActions;
 
     private bool dead;
 
@@ -70,12 +70,7 @@ public class EnemyController : MonoBehaviour
     }
 
     public bool FindPath(Vector3Int target) {
-        bool result = agent.FindPath(target, agent.currentRoom.roomBounds, ref enemyPath, logActions);
-        if (logActions) {
-            Debug.Log($"path result: {result}");
-            Debug.Log($"valid path: {enemyPath.valid}");
-            // Debug.Log($"length: {enemyPath.Length}");
-        }
+        bool result = agent.FindPath(target, agent.currentRoom.roomBounds, ref enemyPath);
         return result;
     }
 }
