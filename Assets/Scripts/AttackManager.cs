@@ -35,6 +35,10 @@ public class AttackManager : ScriptableObject
         this.tilemapManager = tilemapManager;
     }
 
+    public void StartPlayerAttack(Vector3Int targetTile, float damage) {
+        AttackExecuted?.Invoke(targetTile, damage);
+    }
+
     public void StartAttack(
         Vector3Int targetTile,
         float damage,

@@ -13,6 +13,9 @@ public class EnemyController : MonoBehaviour
 
     private EnemyDefinition definition;
     private EnemyDefinition.EnemyInstance instance;
+
+    public string enemyName => instance.name;
+
     [HideInInspector]
     public TilemapAgent agent;
 
@@ -21,7 +24,7 @@ public class EnemyController : MonoBehaviour
     // [SerializeField]
     // public bool logActions;
 
-    private bool dead;
+    public bool dead;
 
     private void Awake() {
         agent = GetComponent<TilemapAgent>();
@@ -64,6 +67,7 @@ public class EnemyController : MonoBehaviour
             dead = instance.TakeDamage(damage);
             if (dead) {
                 spriteRenderer.enabled = false;
+                agent.RemoveDynamicBlocker();
                 EnemyDied?.Invoke();
             }
         }

@@ -48,7 +48,7 @@ public class LogManager : MonoBehaviour
     }
 
     public void SetHP(float current, float max) {
-        hpField.text = $"{current:0}/{max:0}";
+        hpField.text = $"HP {current:0}/{max:0}";
     }
 
     public void Reset() {

@@ -59,6 +59,7 @@ public class LevelManager : MonoBehaviour
         SpawnPlayer(spawnPosition);
         PlaceEnemies(enemySpawnInfos);
         tilemapManager.levelInfo = levelInfo;
+        tilemapManager.enemies = enemies;
         Debug.Log($"Generated in {Time.realtimeSinceStartup - startTime:0.000} seconds.");
     }
 

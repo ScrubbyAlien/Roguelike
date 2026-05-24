@@ -407,7 +407,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.43137255}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1081,6 +1081,7 @@ MonoBehaviour:
   floorPositions: []
   lightMatrix: {fileID: 11400000, guid: d45205a426f8ed84d814dbc2b0d07fdc, type: 2}
   attackManager: {fileID: 11400000, guid: 2a4aff98f0f247445b4e8281a2cd8faf, type: 2}
+  enemies: []
 --- !u!1 &1572873239
 GameObject:
   m_ObjectHideFlags: 0
@@ -1495,7 +1496,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 12, y: 0, z: 0, w: 0}
+  m_margin: {x: 2.3370247, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

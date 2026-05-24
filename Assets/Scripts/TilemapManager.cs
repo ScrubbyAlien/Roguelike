@@ -25,8 +25,10 @@ public class TilemapManager : MonoBehaviour
     private AttackManager attackManager;
 
     private List<Vector3Int> dynamicObstacles;
+    private List<int> disabledDynamicIndices;
 
     public LevelGenerator.LevelInfo levelInfo;
+    public List<EnemyController> enemies;
 
     private void OnDrawGizmos() {
         Gizmos.DrawWireSphere(Vector3.zero, 0.3f);
@@ -68,7 +70,10 @@ public class TilemapManager : MonoBehaviour
     }
 
     public int RegisterDynamicBlocker(Vector3Int position) {
-        if (dynamicObstacles == null) dynamicObstacles = new();
+        if (dynamicObstacles == null) {
+            dynamicObstacles = new();
+            disabledDynamicIndices = new();
+        }
         int index = dynamicObstacles.Count;
         dynamicObstacles.Add(position);
         return index;
@@ -79,15 +84,30 @@ public class TilemapManager : MonoBehaviour
         dynamicObstacles[index] = newPosition;
     }
 
+    public void RemoveDynamicBlocker(int index) {
+        disabledDynamicIndices.Add(index);
+    }
+
     public bool IsBlocked(Vector3Int cellPosition) {
         bool staticObstacle = obstaclePositions.Contains(cellPosition);
-        bool dynamicObstacle = dynamicObstacles.Contains(cellPosition);
+        int indexOf = dynamicObstacles.IndexOf(cellPosition);
+        bool dynamicObstacle = !disabledDynamicIndices.Contains(indexOf) && dynamicObstacles.Contains(cellPosition);
         return staticObstacle || dynamicObstacle;
     }
 
     public bool IsFloor(Vector3Int cellPosition) {
         TileBase tile = obstacleMap.GetTile(cellPosition);
         return tile && !obstacleMatrix.IsObstacle(tile);
+    }
+
+    public bool HasEnemy(Vector3Int cellPosition, out EnemyController enemyController) {
+        enemyController = null;
+        EnemyController[] controllers = enemies.Where(
+            e => e.agent.position == cellPosition && !e.dead
+        ).ToArray();
+        if (controllers.Length == 0) return false;
+        enemyController = controllers[0];
+        return true;
     }
 
     public void SetTiles((TileBase obstacle, TileBase light) tiles, Vector3Int position) {

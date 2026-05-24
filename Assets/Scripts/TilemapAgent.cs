@@ -3,8 +3,8 @@ using UnityEngine.Tilemaps;
 
 public class TilemapAgent : MonoBehaviour
 {
-    [SerializeField]
-    private TilemapManager tilemapManager;
+    [HideInInspector]
+    public TilemapManager tilemapManager;
 
     public Vector3Int position => tilemapManager.WorldToCell(transform.position);
     public Vector2Int room => tilemapManager.RoomOf(position);
@@ -16,8 +16,8 @@ public class TilemapAgent : MonoBehaviour
         transform.position = tilemapManager.Snap(transform.position);
     }
 
-    public bool MoveToTile(Vector3Int newPosition) {
-        if (tilemapManager.IsBlocked(newPosition)) return false;
+    public bool MoveToTile(Vector3Int newPosition, bool force = false) {
+        if (!force && tilemapManager.IsBlocked(newPosition)) return false;
         transform.position = tilemapManager.CellToWorld(newPosition);
         tilemapManager.UpdateDynamicBlocker(dynamicObstacleIndex, newPosition);
         return true;
@@ -35,5 +35,9 @@ public class TilemapAgent : MonoBehaviour
 
     public bool FindPath(Vector3Int target, BoundsInt bounds, ref TilemapManager.Path path, bool log = false) {
         return tilemapManager.FindPath(position, target, ref path, bounds, false, log);
+    }
+
+    public void RemoveDynamicBlocker() {
+        tilemapManager.RemoveDynamicBlocker(dynamicObstacleIndex);
     }
 }

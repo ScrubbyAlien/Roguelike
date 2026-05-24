@@ -61,12 +61,25 @@ public class PlayerController : MonoBehaviour
     public void Move(Vector2 direction) {
         SetSpriteDirection(direction.x);
         Vector3Int newPosition = agent.position + Vector3Int.RoundToInt((Vector3)direction);
-        Warp(newPosition);
+        if (agent.tilemapManager.HasEnemy(newPosition, out EnemyController enemyController)) {
+            AttackTile(newPosition, enemyController.enemyName);
+        }
+        else Warp(newPosition);
     }
 
     public void Warp(Vector3Int position) {
         agent.MoveToTile(position);
         lightMatrix.UpdateDynamicEmitter(dynamicEmitterIndex, agent.position);
+        TakeTurn();
+    }
+
+    private void AttackTile(Vector3Int tilePosition, string targetName) {
+        attackManager.StartPlayerAttack(tilePosition, rogueDefinition.baseAttack);
+        TakeTurn();
+        interactionManager.SendToLog($"Attacked {targetName} for {rogueDefinition.baseAttack:0.0} points of damage.");
+    }
+
+    private void TakeTurn() {
         interactionManager.ResetLog();
         PlayerEarlyMove?.Invoke(agent.position);
         PlayerMove?.Invoke(agent.position);

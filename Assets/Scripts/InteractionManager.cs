@@ -60,6 +60,10 @@ public class InteractionManager : ScriptableObject
         logManager.SetHP(current, max);
     }
 
+    public void SendToLog(string log) {
+        logManager.SendToLog(log);
+    }
+
     public void ResetLog() {
         logManager.Reset();
     }
