@@ -12,17 +12,29 @@ public class TilemapManager : MonoBehaviour
     [SerializeField]
     private Vector3 offset;
     [SerializeField]
-    private Tilemap obstacleMap, lightMap, darknessMap;
+    private Tilemap obstacleMap, lightMap, darknessMap, highlightMap;
     [SerializeField]
     private ObstacleMatrix obstacleMatrix;
+    [HideInInspector]
     public Vector3Int[] obstaclePositions;
+    [HideInInspector]
     public Vector3Int[] floorPositions;
     [SerializeField]
     private LightMatrix lightMatrix;
+    [SerializeField]
+    private AttackManager attackManager;
+
+    private List<Vector3Int> dynamicObstacles;
+
+    public LevelGenerator.LevelInfo levelInfo;
 
     private void OnDrawGizmos() {
         Gizmos.DrawWireSphere(Vector3.zero, 0.3f);
         // Gizmos.DrawWireSphere((Vector2)designatedSize, 0.3f);
+    }
+
+    private void Start() {
+        attackManager.RegisterTilemapManager(this);
     }
 
     public void Reset() {
@@ -51,8 +63,26 @@ public class TilemapManager : MonoBehaviour
         return CellToWorld(WorldToCell(worldPosition));
     }
 
+    public Vector2Int RoomOf(Vector3Int cellPosition) {
+        return new Vector2Int(cellPosition.x / Room.maxWidth, cellPosition.y / Room.maxHeight);
+    }
+
+    public int RegisterDynamicBlocker(Vector3Int position) {
+        if (dynamicObstacles == null) dynamicObstacles = new();
+        int index = dynamicObstacles.Count;
+        dynamicObstacles.Add(position);
+        return index;
+    }
+
+    public void UpdateDynamicBlocker(int index, Vector3Int newPosition) {
+        if (dynamicObstacles == null) return;
+        dynamicObstacles[index] = newPosition;
+    }
+
     public bool IsBlocked(Vector3Int cellPosition) {
-        return obstaclePositions.Contains(cellPosition);
+        bool staticObstacle = obstaclePositions.Contains(cellPosition);
+        bool dynamicObstacle = dynamicObstacles.Contains(cellPosition);
+        return staticObstacle || dynamicObstacle;
     }
 
     public bool IsFloor(Vector3Int cellPosition) {
@@ -63,6 +93,10 @@ public class TilemapManager : MonoBehaviour
     public void SetTiles((TileBase obstacle, TileBase light) tiles, Vector3Int position) {
         obstacleMap.SetTile(position, tiles.obstacle);
         lightMap.SetTile(position, tiles.light);
+    }
+
+    public void SetHighlightTile(TileBase tile, Vector3Int cell) {
+        highlightMap.SetTile(cell, tile);
     }
 
     public TileBase ReadObstacleTile(Vector3Int position) {
@@ -101,12 +135,33 @@ public class TilemapManager : MonoBehaviour
         else return new[] { tile - relFrom, tile - relTo, tile - sum };
     }
 
-    public bool FindPath(Vector3Int from, Vector3Int to, ref Path path, BoundsInt bounds, bool connectRooms = false) {
+    public bool FindPath(Vector3Int from,
+                         Vector3Int to,
+                         ref Path path,
+                         BoundsInt bounds,
+                         bool connectRooms = false,
+                         bool log = false) {
         Dictionary<Vector3Int, Vector3Int[]> frontier = new(); // key: tile, value: path to tile
         HashSet<Vector3Int> vistited = new();
 
+        if (log) {
+            Debug.Log("path finding start");
+        }
+
         frontier.Add(from, new[] { from });
         bool pathFound = false;
+
+        if (!bounds.Contains(from)) {
+            Debug.Log("invalid bounds");
+            path.SetTiles(null);
+            return false;
+        }
+
+        if (from == to) { // if from and to are the same position return one tile path
+            path.SetTiles(frontier[from]);
+            pathFound = true;
+            return true;
+        }
 
         while (frontier.Count > 0) {
             // pick frontier element closest to target
@@ -123,7 +178,6 @@ public class TilemapManager : MonoBehaviour
             }
 
             if (next == to) { // path is found
-                Assert.IsTrue(vistited.Count > 0); // path must be 2 or longer so at least one tile must be visited
                 path.SetTiles(pathToNext);
                 pathFound = true;
                 break; // break early when path is found
@@ -134,7 +188,7 @@ public class TilemapManager : MonoBehaviour
                 if (vistited.Contains(neighbour) || frontier.ContainsKey(neighbour)) continue;
                 else if (!bounds.Contains(neighbour)) continue;
                 else if (connectRooms && neighbour != to && ReadObstacleTile(neighbour)) continue;
-                else if (!connectRooms && IsBlocked(neighbour)) continue;
+                else if (!connectRooms && neighbour != to && IsBlocked(neighbour)) continue;
 
                 Vector3Int[] pathToNeighbour = new Vector3Int[pathToNext.Length + 1];
                 for (int i = 0; i < pathToNext.Length; i++) {
@@ -181,17 +235,19 @@ public class TilemapManager : MonoBehaviour
                 return false;
             }
             bool validCandidate = true;
-            if (tiles.Length < 2) validCandidate = false;
-            for (int i = 1; i < tiles.Length; i++) {
-                if (!tiles[i].IsNeighbourWith(tiles[i - 1])) {
-                    validCandidate = false;
-                    break;
+            if (tiles.Length == 0) validCandidate = false;
+            if (tiles.Length > 1) {
+                for (int i = 1; i < tiles.Length; i++) {
+                    if (!tiles[i].IsNeighbourWith(tiles[i - 1])) {
+                        validCandidate = false;
+                        break;
+                    }
                 }
             }
 
             if (validCandidate) this.tiles = tiles;
             else {
-                Debug.LogError("Path is not valid. Either discontinuous or start and end are indisinct");
+                Debug.LogError("Path is not valid. Path must be continuous.");
                 this.tiles = null;
             }
             return valid;
@@ -201,6 +257,14 @@ public class TilemapManager : MonoBehaviour
             from = Vector3Int.one * int.MinValue;
             to = Vector3Int.one * int.MinValue;
             tile = Vector3Int.one * int.MinValue;
+
+            // if there is only one tile in the path then return that tile for all results
+            if (tiles.Length == 1) {
+                tile = tiles[0];
+                from = tiles[0];
+                to = tiles[0];
+                return PathTileType.OneTile;
+            }
 
             if (!valid) return PathTileType.Invalid;
             if (index < 0 || index >= tiles.Length) return PathTileType.Invalid;
@@ -223,12 +287,18 @@ public class TilemapManager : MonoBehaviour
             }
         }
 
+        public Vector3Int GetPathTile(int index) {
+            GetPathTile(index, out Vector3Int returnTile, out Vector3Int _, out Vector3Int _);
+            return returnTile;
+        }
+
         public enum PathTileType
         {
             Invalid,
             Start,
             End,
-            Middle
+            Middle,
+            OneTile,
         }
     }
 }

@@ -74,7 +74,7 @@ public class Room : MonoBehaviour
         public readonly Vector3Int spawnPoint;
         public readonly Vector3Int gridPosition;
         public int numberEnemies;
-        private BoundsInt roomBounds;
+        public readonly BoundsInt roomBounds;
         private Room roomReference;
         private HashSet<RoomInstance> connections;
 
@@ -99,7 +99,12 @@ public class Room : MonoBehaviour
                 exits[i] += gridPositionOffset;
             }
 
-            roomBounds = new BoundsInt(gridPositionOffset, new Vector3Int(Room.maxWidth, Room.maxHeight, 1));
+            roomBounds = new BoundsInt(gridPositionOffset,
+                new Vector3Int(
+                    Room.maxWidth * reference.sizeInGrid.x,
+                    Room.maxHeight * reference.sizeInGrid.y, 1
+                )
+            );
             floorPositions = AllPositions()
                              .Where(p => obstacleMatrix.IsFloor(obstacles.GetTile(p.room)))
                              .Select(p => p.level).ToArray();

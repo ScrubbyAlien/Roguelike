@@ -13,12 +13,17 @@ public class RogueDefinition : ScriptableObject
 
     public class RogueInstance
     {
-        private float currentHitPoints;
+        public float currentHitPoints { get; private set; }
         private float attack;
 
         public RogueInstance(float currentHitPoints, float attack) {
             this.currentHitPoints = currentHitPoints;
             this.attack = attack;
+        }
+
+        public bool TakeDamage(float damage) {
+            currentHitPoints -= damage;
+            return currentHitPoints <= 0;
         }
     }
 }

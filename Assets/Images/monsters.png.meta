@@ -1705,6 +1705,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: yellow_warning
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 384
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: efb829079a820b04087ff1ba80cb13fd
+      internalID: -530366033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red_warning
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 384
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3fa7478a4dfefd5458173bd13c7bfd2b
+      internalID: 56668025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1783,6 +1827,8 @@ TextureImporter:
       monsters_7: -2086191518149510023
       monsters_8: -3398425601533472082
       monsters_9: 3499036745522295064
+      red_warning: 56668025
+      yellow_warning: -530366033
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -19,6 +19,32 @@ public class LevelGenerator
     private Vector2Int startRoomPosition;
     private Room.RoomInstance startRoom => roomMatrix[startRoomPosition.x, startRoomPosition.y];
 
+    public class LevelInfo
+    {
+        public Vector2Int levelSize;
+        public BoundsInt levelBounds;
+
+        public Room.RoomInstance[,] roomMatrix;
+        public Room.RoomInstance[] allRooms;
+        public Vector2Int[] mainPath;
+        public Vector2Int startRoomPosition => mainPath[0];
+        public Vector2Int endRoomPosition => mainPath.Last();
+        public Room.RoomInstance startRoom => roomMatrix[startRoomPosition.x, startRoomPosition.y];
+        public Room.RoomInstance endRoom => roomMatrix[endRoomPosition.x, endRoomPosition.y];
+
+        public LevelInfo(LevelGenerator generator) {
+            levelSize = generator.levelSize;
+            levelBounds = generator.levelBounds;
+            roomMatrix = generator.roomMatrix;
+            allRooms = generator.allRooms;
+            mainPath = generator.mainPath;
+        }
+    }
+
+    public LevelInfo GetLevelInfo() {
+        return new LevelInfo(this);
+    }
+
     private const int searchBoundsOffset = 10;
     private const int connectingPathMaxLength = 30;
 
@@ -204,4 +230,6 @@ public class LevelGenerator
             return new Vector2Int(0, y);
         }
     }
+
+
 }

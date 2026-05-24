@@ -53,10 +53,12 @@ public class LevelManager : MonoBehaviour
         levelConfigurations[currentLevel].GenerateLevel(
             tilemapManager,
             out Vector3 spawnPosition,
-            out LevelConfiguration.EnemySpawnInfo[] enemySpawnInfos
+            out LevelConfiguration.EnemySpawnInfo[] enemySpawnInfos,
+            out LevelGenerator.LevelInfo levelInfo
         );
         SpawnPlayer(spawnPosition);
         PlaceEnemies(enemySpawnInfos);
+        tilemapManager.levelInfo = levelInfo;
         Debug.Log($"Generated in {Time.realtimeSinceStartup - startTime:0.000} seconds.");
     }
 

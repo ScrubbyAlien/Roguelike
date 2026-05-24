@@ -116,4 +116,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 5726830921994579540}
   lightMatrix: {fileID: 11400000, guid: d45205a426f8ed84d814dbc2b0d07fdc, type: 2}
-  rogueDefinition: {fileID: 11400000, guid: c32954c651379e94182ed754ba16fbc9, type: 2}
+  attackManager: {fileID: 11400000, guid: 2a4aff98f0f247445b4e8281a2cd8faf, type: 2}

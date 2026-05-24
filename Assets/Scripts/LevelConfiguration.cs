@@ -21,11 +21,11 @@ public class LevelConfiguration : ScriptableObject
     private EnemyDefinition[] enemies;
     private Room[] rooms;
 
-
     public void GenerateLevel(
         TilemapManager tilemapManager,
         out Vector3 spawnPosition,
-        out EnemySpawnInfo[] enemySpawnInfos
+        out EnemySpawnInfo[] enemySpawnInfos,
+        out LevelGenerator.LevelInfo levelInfo
     ) {
         rooms = Resources.LoadAll<Room>(roomsResourcePath);
         LevelGenerator levelGenerator = new LevelGenerator(tilemapManager, levelSize);
@@ -40,6 +40,7 @@ public class LevelConfiguration : ScriptableObject
         levelGenerator.GetEnemySpawnInfos(enemies, enemyDensity, out enemySpawnInfos);
 
         spawnPosition = (Vector3)spawnPoint;
+        levelInfo = levelGenerator.GetLevelInfo();
     }
 
     public struct EnemySpawnInfo

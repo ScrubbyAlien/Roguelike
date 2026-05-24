@@ -9,13 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8116ff2d3f364047b0aa8e7a0e9f74a, type: 3}
-  m_Name: Snake
+  m_Script: {fileID: 11500000, guid: 94103fe781a92674a85bef2a20df090a, type: 3}
+  m_Name: AttackManager
   m_EditorClassIdentifier: 
-  enemyName: Snake
-  sprite: {fileID: 5811538498805445843, guid: fa88e3a3fd08860409b6833efbb4f024, type: 3}
-  hitPoints: 10
-  damage: 1
-  turnsPerPlayerTurn: 0.5
-  attackDelay: 2
-  behaviour: 0
+  imminentHighlightTile: {fileID: 11400000, guid: 2376eb9d9f70d754fa079e64188847e7, type: 2}
+  notImminentHighlightTile: {fileID: 11400000, guid: 78d4c82f85891a2449032473e4cf8eb5, type: 2}

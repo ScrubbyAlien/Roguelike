@@ -114,3 +114,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84c7be74e4c3dd84c859ce592ae34acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 5726830921994579540}
+  attackManager: {fileID: 11400000, guid: 2a4aff98f0f247445b4e8281a2cd8faf, type: 2}
+  agent: {fileID: 0}
