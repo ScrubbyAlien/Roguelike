@@ -11,13 +11,22 @@ public class LevelConfiguration : ScriptableObject
     private int length;
     [SerializeField, Range(0f, 1f)]
     private float complexity;
+    [SerializeField, Range(0f, 1f)]
+    private float enemyDensity;
     [SerializeField]
     private string roomsResourcePath;
     [SerializeField]
     private TileBase floorTile, wallTile;
+    [SerializeField]
+    private EnemyDefinition[] enemies;
     private Room[] rooms;
 
-    public void GenerateLevel(TilemapManager tilemapManager, out Vector3 spawnPosition) {
+
+    public void GenerateLevel(
+        TilemapManager tilemapManager,
+        out Vector3 spawnPosition,
+        out EnemySpawnInfo[] enemySpawnInfos
+    ) {
         rooms = Resources.LoadAll<Room>(roomsResourcePath);
         LevelGenerator levelGenerator = new LevelGenerator(tilemapManager, levelSize);
 
@@ -26,6 +35,21 @@ public class LevelConfiguration : ScriptableObject
         levelGenerator.AddSuperfluousPaths(complexity, floorTile, wallTile);
         levelGenerator.TrimUnreachableRooms();
 
+        tilemapManager.InitializeMatrices();
+
+        levelGenerator.GetEnemySpawnInfos(enemies, enemyDensity, out enemySpawnInfos);
+
         spawnPosition = (Vector3)spawnPoint;
+    }
+
+    public struct EnemySpawnInfo
+    {
+        public Vector3Int position;
+        public EnemyDefinition definition;
+
+        public EnemySpawnInfo(Vector3Int position, EnemyDefinition definition) {
+            this.position = position;
+            this.definition = definition;
+        }
     }
 }

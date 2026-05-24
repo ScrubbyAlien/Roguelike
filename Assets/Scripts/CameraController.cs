@@ -2,14 +2,9 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    private Vector3 offset;
-
-    private void Awake() {
-        offset = transform.position;
-    }
+    private static readonly Vector3 offset = new Vector3(Room.maxWidth / 2f, Room.maxHeight / 2f, -10);
 
     public void Initialize(PlayerController playerController) {
-        offset = transform.position;
         playerController.PlayerMove += SetCameraPosition;
         SetCameraPosition(playerController.position);
     }

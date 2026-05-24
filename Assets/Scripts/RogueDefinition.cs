@@ -4,6 +4,21 @@ using UnityEngine;
 public class RogueDefinition : ScriptableObject
 {
     public Sprite sprite;
-    public int baseHealth;
-    public int baseAttack;
+    public float baseHealth;
+    public float baseAttack;
+
+    public RogueInstance NewInstance() {
+        return new RogueInstance(baseHealth, baseAttack);
+    }
+
+    public class RogueInstance
+    {
+        private float currentHitPoints;
+        private float attack;
+
+        public RogueInstance(float currentHitPoints, float attack) {
+            this.currentHitPoints = currentHitPoints;
+            this.attack = attack;
+        }
+    }
 }

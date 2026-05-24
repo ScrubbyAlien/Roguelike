@@ -1,17 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class Room : MonoBehaviour
 {
     public const int maxWidth = 20;
     public const int maxHeight = 15;
 
+    [SerializeField]
+    private ObstacleMatrix obstacleMatrix;
     [SerializeField, Min(1)]
     public Vector2Int sizeInGrid = Vector2Int.one;
-
+    [SerializeField, MinMaxSlider(0, 20)]
+    private Vector2Int minMaxEnemies;
     [SerializeField]
     private Vector3Int[] exits;
     [SerializeField]
@@ -59,28 +64,32 @@ public class Room : MonoBehaviour
     }
 
     public RoomInstance CreateInstance(Vector3Int gridPosition) {
-        return new RoomInstance(gridPosition, this);
+        return new RoomInstance(gridPosition, this, obstacleMatrix, obstacles);
     }
 
     public class RoomInstance
     {
         public readonly Vector3Int[] exits;
+        public readonly Vector3Int[] floorPositions;
         public readonly Vector3Int spawnPoint;
         public readonly Vector3Int gridPosition;
+        public int numberEnemies;
+        private BoundsInt roomBounds;
         private Room roomReference;
         private HashSet<RoomInstance> connections;
 
         private bool exists;
 
-        public RoomInstance(Vector3Int gridPosition, Room reference) {
+        public RoomInstance(Vector3Int gridPosition, Room reference, ObstacleMatrix obstacleMatrix, Tilemap obstacles) {
             this.gridPosition = gridPosition;
             Vector3Int gridPositionOffset = new Vector3Int(
                 Room.maxWidth * gridPosition.x,
                 Room.maxHeight * gridPosition.y
             );
             roomReference = reference;
-
             spawnPoint = reference.spawnPoint + gridPositionOffset;
+
+            numberEnemies = Random.Range(reference.minMaxEnemies.x, reference.minMaxEnemies.y);
 
             exits = new Vector3Int[reference.exits.Length];
             Array.Copy(reference.exits, exits, reference.exits.Length);
@@ -90,12 +99,16 @@ public class Room : MonoBehaviour
                 exits[i] += gridPositionOffset;
             }
 
-            connections = new();
+            roomBounds = new BoundsInt(gridPositionOffset, new Vector3Int(Room.maxWidth, Room.maxHeight, 1));
+            floorPositions = AllPositions()
+                             .Where(p => obstacleMatrix.IsFloor(obstacles.GetTile(p.room)))
+                             .Select(p => p.level).ToArray();
 
+            connections = new();
             exists = false;
         }
 
-        private IEnumerable<(Vector3Int, Vector3Int)> AllPositions() {
+        private IEnumerable<(Vector3Int room, Vector3Int level)> AllPositions() {
             for (int x = 0; x < Room.maxWidth * roomReference.sizeInGrid.x; x++) {
                 for (int y = 0; y < Room.maxHeight * roomReference.sizeInGrid.y; y++) {
                     Vector3Int roomPosition = new Vector3Int(x, y, 0);
@@ -144,6 +157,10 @@ public class Room : MonoBehaviour
         public static void Connect(RoomInstance instance1, RoomInstance instance2) {
             instance1.connections.Add(instance2);
             instance2.connections.Add(instance1);
+        }
+
+        public bool IsPositionInRoom(Vector3Int position) {
+            return roomBounds.Contains(position);
         }
     }
 }

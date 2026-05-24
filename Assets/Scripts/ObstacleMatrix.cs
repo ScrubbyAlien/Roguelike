@@ -15,18 +15,29 @@ public class ObstacleMatrix : ScriptableObject
         obstacleTiles = Resources.LoadAll<TileBase>("Obstacles");
     }
 
-    public Vector3Int[] SetObstaclePositions(Tilemap map) {
-        List<Vector3Int> obstacles = new();
+    public void SetObstaclePositions(Tilemap map, ref Vector3Int[] obstacles, ref Vector3Int[] floor) {
+        List<Vector3Int> obstaclesList = new();
+        List<Vector3Int> floorList = new();
         map.CompressBounds();
 
         for (int x = map.cellBounds.xMin; x < map.cellBounds.xMax; x++) {
             for (int y = map.cellBounds.yMin; y < map.cellBounds.yMax; y++) {
                 Vector3Int candidatePosition = new Vector3Int(x, y, 0);
                 TileBase tile = map.GetTile<TileBase>(candidatePosition);
-                if (obstacleTiles.Contains(tile)) obstacles.Add(candidatePosition);
+                if (obstacleTiles.Contains(tile)) obstaclesList.Add(candidatePosition);
+                else if (tile) floorList.Add(candidatePosition);
             }
         }
 
-        return obstacles.ToArray();
+        obstacles = obstaclesList.ToArray();
+        floor = floorList.ToArray();
+    }
+
+    public bool IsObstacle(TileBase tile) {
+        return obstacleTiles.Contains(tile);
+    }
+
+    public bool IsFloor(TileBase tile) {
+        return tile && !IsObstacle(tile);
     }
 }

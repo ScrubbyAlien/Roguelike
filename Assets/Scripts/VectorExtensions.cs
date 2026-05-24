@@ -25,4 +25,23 @@ public static class VectorExtensions
         Vector3Int difference = to - origin;
         return Mathf.Abs(difference.x) + Mathf.Abs(difference.y);
     }
+
+    public static T RandomElement<T>(this T[] array) {
+        return array[Random.Range(0, array.Length)];
+    }
+
+    public static T RandomElement<T>(this T[] array, out int index) {
+        index = Random.Range(0, array.Length);
+        return array[index];
+    }
+
+    public static T RandomElement<T>(this List<T> list) {
+        return list[Random.Range(0, list.Count)];
+    }
+
+    public static void DestroyAll<T>(this IEnumerable<T> collection) where T : MonoBehaviour {
+        foreach (MonoBehaviour monoBehaviour in collection) {
+            GameObject.Destroy(monoBehaviour.gameObject);
+        }
+    }
 }

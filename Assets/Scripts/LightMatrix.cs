@@ -32,7 +32,7 @@ public class LightMatrix : ScriptableObject
     private List<Vector3Int> dynamicEmitters;
     private Tilemap darknessMap;
 
-    private void OnEnable() {
+    public void OnEnable() {
         dynamicEmitters = new();
     }
 

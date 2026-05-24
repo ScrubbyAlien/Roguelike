@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 3666060224848032717}
   - component: {fileID: 5726830921994579540}
   - component: {fileID: 1969858597929189449}
-  - component: {fileID: 4790247257695461781}
+  - component: {fileID: -2026509862088882211}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 6847130768412236191, guid: 15132b9e29ba03f47a7e7e9d7f4101cf, type: 3}
+  m_Sprite: {fileID: 5811538498805445843, guid: fa88e3a3fd08860409b6833efbb4f024, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemapManager: {fileID: 0}
---- !u!114 &4790247257695461781
+--- !u!114 &-2026509862088882211
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,9 +111,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7556652335088084110}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efecee2413bc8cc45a31ff480fe7769f, type: 3}
+  m_Script: {fileID: 11500000, guid: 84c7be74e4c3dd84c859ce592ae34acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 5726830921994579540}
-  lightMatrix: {fileID: 11400000, guid: d45205a426f8ed84d814dbc2b0d07fdc, type: 2}
-  rogueDefinition: {fileID: 11400000, guid: c32954c651379e94182ed754ba16fbc9, type: 2}

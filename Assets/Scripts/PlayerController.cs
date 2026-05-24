@@ -15,14 +15,20 @@ public class PlayerController : MonoBehaviour
     private LightMatrix lightMatrix;
     private int dynamicEmitterIndex;
 
+    private RogueDefinition rogueDefinition;
+    private RogueDefinition.RogueInstance rogueInstance;
+
     private InputAction move;
     private InputAction confirm;
 
     public Vector3Int position => agent.position;
 
-    public void Initialize(TilemapAgent agent) {
+    public void Initialize(TilemapAgent agent, RogueDefinition rogueDefinition) {
         dynamicEmitterIndex = lightMatrix.RegisterDynamicEmitter(agent.position);
         this.agent = agent;
+        this.rogueDefinition = rogueDefinition;
+        rogueInstance = rogueDefinition.NewInstance();
+        spriteRenderer.sprite = rogueDefinition.sprite;
     }
 
     private void Update() {
@@ -35,7 +41,6 @@ public class PlayerController : MonoBehaviour
 
     public void Move(Vector2 direction) {
         SetSpriteDirection(direction.x);
-
         Vector3Int newPosition = agent.position + Vector3Int.RoundToInt((Vector3)direction);
         Warp(newPosition);
     }

@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8116ff2d3f364047b0aa8e7a0e9f74a, type: 3}
+  m_Name: Snake
+  m_EditorClassIdentifier: 
+  enemyName: Snake
+  sprite: {fileID: 5811538498805445843, guid: fa88e3a3fd08860409b6833efbb4f024, type: 3}
+  hitPoints: 10
+  damage: 1

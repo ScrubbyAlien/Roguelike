@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.Tilemaps;
+using Assert = UnityEngine.Assertions.Assert;
 using Random = UnityEngine.Random;
+using EnemySpawnInfo = LevelConfiguration.EnemySpawnInfo;
 
 public class LevelGenerator
 {
@@ -13,6 +14,7 @@ public class LevelGenerator
     private BoundsInt levelBounds;
 
     private Room.RoomInstance[,] roomMatrix;
+    private Room.RoomInstance[] allRooms;
     private Vector2Int[] mainPath;
     private Vector2Int startRoomPosition;
     private Room.RoomInstance startRoom => roomMatrix[startRoomPosition.x, startRoomPosition.y];
@@ -68,9 +70,7 @@ public class LevelGenerator
                 n => levelBounds.Contains((Vector3Int)n) && !mainPath.Contains(n)
             ).ToArray();
             if (neighbours.Length == 0) break;
-
-            int randomIndex = Random.Range(0, neighbours.Length);
-            mainPath[i + 1] = neighbours[randomIndex];
+            mainPath[i + 1] = neighbours.RandomElement();
         }
 
         for (int i = 1; i < length; i++) {
@@ -102,8 +102,7 @@ public class LevelGenerator
         // stop if adding another room surpasses complexity
         while ((connectedRooms.Count + 1) / levelArea < complexity) {
             if (neighbours.Count == 0) break;
-            int randomIndex = Random.Range(0, neighbours.Count);
-            Vector2Int roomToConnect = neighbours[randomIndex];
+            Vector2Int roomToConnect = neighbours.RandomElement();
             Vector2Int connected = roomToConnect.Neighbours().Where(n => connectedRooms.Contains(n)).First();
 
             addNeighbours(roomToConnect);
@@ -115,17 +114,40 @@ public class LevelGenerator
     }
 
     public void TrimUnreachableRooms() {
-        for (int x = 0; x < roomMatrix.GetLength(0); x++) {
-            for (int y = 0; y < roomMatrix.GetLength(1); y++) {
-                Room.RoomInstance room = roomMatrix[x, y];
-                if (!room.IsConnected()) room.ClearFromTileMap(tilemapManager);
-            }
+        List<Room.RoomInstance> rooms = new();
+        foreach (Room.RoomInstance room in roomMatrix) {
+            if (!room.IsConnected()) room.ClearFromTileMap(tilemapManager);
+            else if (!rooms.Contains(room)) rooms.Add(room);
         }
+        allRooms = rooms.ToArray();
     }
 
-    public void PlaceEnemies() { }
+    public void GetLootPositions() { }
 
-    public void PlaceLoot() { }
+    public void GetEnemySpawnInfos(EnemyDefinition[] enemyDefintions, float density, out EnemySpawnInfo[] infos) {
+        List<EnemySpawnInfo> infosList = new();
+        List<Vector3Int> usedPositiones = new();
+        int enemyRooms = Mathf.RoundToInt(allRooms.Length * density);
+        List<Room.RoomInstance> availableRooms = allRooms
+                                                 .Where(r => r.numberEnemies > 0)
+                                                 .Where(r => r != startRoom)
+                                                 .ToList();
+
+        for (int i = 0; i < enemyRooms && availableRooms.Count > 0; i++) {
+            Room.RoomInstance room = availableRooms.RandomElement();
+            availableRooms.Remove(room);
+
+            int currentEnemyCount = infosList.Count;
+            while (infosList.Count < currentEnemyCount + room.numberEnemies) {
+                Vector3Int candidatePosition = room.floorPositions.RandomElement();
+                if (usedPositiones.Contains(candidatePosition)) continue;
+                infosList.Add(new EnemySpawnInfo(candidatePosition, enemyDefintions.RandomElement()));
+                usedPositiones.Add(candidatePosition);
+            }
+        }
+
+        infos = infosList.ToArray();
+    }
 
     private bool ConnectRooms(Vector2Int room1Pos, Vector2Int room2Pos, TileBase floor, TileBase wall) {
         Room.RoomInstance room1 = roomMatrix[room1Pos.x, room1Pos.y];
@@ -166,8 +188,7 @@ public class LevelGenerator
         Vector2Int roomSize = Vector2Int.zero;
         Room randomRoom = null;
         do {
-            int randomIndex = Random.Range(0, rooms.Length);
-            randomRoom = rooms[randomIndex];
+            randomRoom = rooms.RandomElement();
             roomSize = randomRoom.sizeInGrid;
         } while (roomSize.x > maxSize.x || roomSize.y > maxSize.y);
         return randomRoom;

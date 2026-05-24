@@ -752,9 +752,14 @@ MonoBehaviour:
   startingLevel: 0
   levelConfigurations:
   - {fileID: 11400000, guid: 0d4a6aa908975b04098b664c33e0887e, type: 2}
-  player: {fileID: 1969858597929189449, guid: 006ad22698bcbee4d8c978424ca2f4c7, type: 3}
   tilemapManager: {fileID: 1402745942}
   cameraController: {fileID: 1608854429}
+  playerPrefab: {fileID: 1969858597929189449, guid: 006ad22698bcbee4d8c978424ca2f4c7, type: 3}
+  enemyPrefab: {fileID: -2026509862088882211, guid: e8a65904c8a8cf146b49139abfe8eaff, type: 3}
+  defintions:
+  - {fileID: 11400000, guid: c32954c651379e94182ed754ba16fbc9, type: 2}
+  - {fileID: 11400000, guid: d244a3c785f9f824899190eb5900dad1, type: 2}
+  - {fileID: 11400000, guid: b47feb50eedf1584fb291e98eeaf360d, type: 2}
 --- !u!4 &689091527
 Transform:
   m_ObjectHideFlags: 0

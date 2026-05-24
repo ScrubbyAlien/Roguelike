@@ -15,32 +15,26 @@ public class TilemapManager : MonoBehaviour
     private Tilemap obstacleMap, lightMap, darknessMap;
     [SerializeField]
     private ObstacleMatrix obstacleMatrix;
-    private Vector3Int[] obstaclePositions;
+    public Vector3Int[] obstaclePositions;
+    public Vector3Int[] floorPositions;
     [SerializeField]
     private LightMatrix lightMatrix;
-
-    private List<TilemapAgent> players;
 
     private void OnDrawGizmos() {
         Gizmos.DrawWireSphere(Vector3.zero, 0.3f);
         // Gizmos.DrawWireSphere((Vector2)designatedSize, 0.3f);
     }
 
-    public void ClearAllTilemaps() {
+    public void Reset() {
         obstacleMap.ClearAllTiles();
         lightMap.ClearAllTiles();
         darknessMap.ClearAllTiles();
-    }
 
-    public void RegisterPlayer(TilemapAgent agent) {
-        if (players == null) players = new();
-        if (agent.TryGetComponent<PlayerController>(out PlayerController _)) {
-            players.Add(agent);
-        }
+        lightMatrix.OnEnable();
     }
 
     public void InitializeMatrices() {
-        obstaclePositions = obstacleMatrix.SetObstaclePositions(obstacleMap);
+        obstacleMatrix.SetObstaclePositions(obstacleMap, ref obstaclePositions, ref floorPositions);
         lightMatrix.SetStaticEmitterPositions(lightMap);
         lightMatrix.RefreshLight(darknessMap);
     }
@@ -59,6 +53,11 @@ public class TilemapManager : MonoBehaviour
 
     public bool IsBlocked(Vector3Int cellPosition) {
         return obstaclePositions.Contains(cellPosition);
+    }
+
+    public bool IsFloor(Vector3Int cellPosition) {
+        TileBase tile = obstacleMap.GetTile(cellPosition);
+        return tile && !obstacleMatrix.IsObstacle(tile);
     }
 
     public void SetTiles((TileBase obstacle, TileBase light) tiles, Vector3Int position) {
