@@ -12,6 +12,9 @@ public class AttackManager : ScriptableObject
     private TilemapManager tilemapManager;
 
     [SerializeField]
+    private InteractionManager interactionManager;
+
+    [SerializeField]
     private TileBase imminentHighlightTile, notImminentHighlightTile;
 
     private List<Attack> attacks;
@@ -44,6 +47,7 @@ public class AttackManager : ScriptableObject
             callback?.Invoke(enemyInstance);
         }
         else {
+            int index = attacks.Count;
             attacks.Add(new Attack() {
                 targetTile = targetTile,
                 damage = damage,
@@ -51,6 +55,11 @@ public class AttackManager : ScriptableObject
                 enemyInstance = enemyInstance,
                 callback = callback,
             });
+
+            GetAttackString(targetTile, out string attackString);
+            int tileInformationIndex = interactionManager.AddTileInformation(targetTile, attackString);
+            attacks[index].tileInformationIndex = tileInformationIndex;
+
             if (delay == 1) tilemapManager.SetHighlightTile(imminentHighlightTile, targetTile);
             if (delay > 1) tilemapManager.SetHighlightTile(notImminentHighlightTile, targetTile);
         }
@@ -58,12 +67,23 @@ public class AttackManager : ScriptableObject
 
     public void OnTakeTurn(Vector3Int _) {
         foreach (Attack attack in attacks) {
+            if (attack.enemyInstance.currentHitPoints <= 0) {
+                attack.delay = -1;
+                tilemapManager.SetHighlightTile(null, attack.targetTile);
+                interactionManager.RemoveTileInformation(attack.targetTile, attack.tileInformationIndex);
+                continue;
+            }
             attack.delay -= 1;
-            if (attack.delay <= 1) tilemapManager.SetHighlightTile(imminentHighlightTile, attack.targetTile);
+            GetAttackString(attack.targetTile, out string info);
+            interactionManager.ChangeTileInformation(attack.targetTile, attack.tileInformationIndex, info);
+            if (attack.delay <= 1) {
+                tilemapManager.SetHighlightTile(imminentHighlightTile, attack.targetTile);
+            }
             if (attack.delay <= 0) {
                 AttackExecuted?.Invoke(attack.targetTile, attack.damage);
                 attack.callback?.Invoke(attack.enemyInstance);
                 tilemapManager.SetHighlightTile(null, attack.targetTile);
+                interactionManager.RemoveTileInformation(attack.targetTile, attack.tileInformationIndex);
             }
         }
 
@@ -94,5 +114,6 @@ public class AttackManager : ScriptableObject
         public int delay;
         public EnemyDefinition.EnemyInstance enemyInstance;
         public Action<EnemyDefinition.EnemyInstance> callback;
+        public int tileInformationIndex;
     }
 }

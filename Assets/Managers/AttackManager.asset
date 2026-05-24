@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94103fe781a92674a85bef2a20df090a, type: 3}
   m_Name: AttackManager
   m_EditorClassIdentifier: 
+  interactionManager: {fileID: 11400000, guid: eeeee7fc49646b849919d7c2c78ed2af, type: 2}
   imminentHighlightTile: {fileID: 11400000, guid: 2376eb9d9f70d754fa079e64188847e7, type: 2}
   notImminentHighlightTile: {fileID: 11400000, guid: 78d4c82f85891a2449032473e4cf8eb5, type: 2}

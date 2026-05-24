@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     public event Action<Vector3Int> PlayerMove;
     public event Action<Vector3Int> PlayerLateMove;
     public event Action PlayerDied;
-    public event Action<float, float> PlayerDamageTaken;
 
     private TilemapAgent agent;
     [SerializeField]
@@ -21,6 +20,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private AttackManager attackManager;
+
+    [SerializeField]
+    private InteractionManager interactionManager;
 
     private bool dead;
 
@@ -43,6 +45,8 @@ public class PlayerController : MonoBehaviour
         this.rogueDefinition = rogueDefinition;
         rogueInstance = rogueDefinition.NewInstance();
         spriteRenderer.sprite = rogueDefinition.sprite;
+
+        interactionManager.UpdateHP(rogueInstance.currentHitPoints, rogueDefinition.baseHealth);
     }
 
     private void Update() {
@@ -63,9 +67,11 @@ public class PlayerController : MonoBehaviour
     public void Warp(Vector3Int position) {
         agent.MoveToTile(position);
         lightMatrix.UpdateDynamicEmitter(dynamicEmitterIndex, agent.position);
+        interactionManager.ResetLog();
         PlayerEarlyMove?.Invoke(agent.position);
         PlayerMove?.Invoke(agent.position);
         PlayerLateMove?.Invoke(agent.position);
+        interactionManager.SendTileInfoToLog(agent.position);
     }
 
     public void Confirm() {
@@ -80,8 +86,8 @@ public class PlayerController : MonoBehaviour
     private void ProcessAttack(Vector3Int targetTile, float damage) {
         if (targetTile == agent.position) {
             dead = rogueInstance.TakeDamage(damage);
-            PlayerDamageTaken?.Invoke(damage, rogueInstance.currentHitPoints);
-            Debug.Log("damage taken");
+            interactionManager.LogDamage(rogueDefinition.name, damage);
+            interactionManager.UpdateHP(rogueInstance.currentHitPoints, rogueDefinition.baseHealth);
             if (dead) {
                 spriteRenderer.enabled = false;
                 PlayerDied?.Invoke();

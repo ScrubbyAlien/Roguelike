@@ -117,3 +117,4 @@ MonoBehaviour:
   spriteRenderer: {fileID: 5726830921994579540}
   lightMatrix: {fileID: 11400000, guid: d45205a426f8ed84d814dbc2b0d07fdc, type: 2}
   attackManager: {fileID: 11400000, guid: 2a4aff98f0f247445b4e8281a2cd8faf, type: 2}
+  interactionManager: {fileID: 11400000, guid: eeeee7fc49646b849919d7c2c78ed2af, type: 2}
