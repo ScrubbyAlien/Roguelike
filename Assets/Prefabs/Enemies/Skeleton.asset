@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c8116ff2d3f364047b0aa8e7a0e9f74a, type: 3}
-  m_Name: Mushroom
+  m_Name: Skeleton
   m_EditorClassIdentifier: 
-  enemyName: Mushroom
-  expOnDeath: 8
-  sprite: {fileID: -5422780926002879241, guid: bfd54c74ae7a4514aa927911ada4c165, type: 3}
-  hitPoints: 40
-  damage: 5
+  enemyName: Skeleton
+  expOnDeath: 10
+  sprite: {fileID: 3671900364904746485, guid: bfd54c74ae7a4514aa927911ada4c165, type: 3}
+  hitPoints: 30
+  damage: 3
   turnsPerPlayerTurn: 1
   attackDelay: 2
   behaviour: 0

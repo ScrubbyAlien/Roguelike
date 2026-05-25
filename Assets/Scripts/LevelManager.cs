@@ -90,10 +90,17 @@ public class LevelManager : MonoBehaviour
         EnemyController enemy = Instantiate(enemyPrefab, worldPosition, Quaternion.identity);
         enemy.Initialize(enemySpawnInfo.definition, playerController, tilemapManager);
         enemies.Add(enemy);
+        enemy.EnemyDied += playerController.OnEnemyDeath;
     }
 
-    public void GoToNextLevel() {
+    public void GoToNextLevel(out int level) {
         currentLevel += 1;
+        if (currentLevel == levelConfigurations.Length) {
+            EndGame();
+        }
         Regenerate();
+        level = currentLevel;
     }
+
+    private void EndGame() { }
 }

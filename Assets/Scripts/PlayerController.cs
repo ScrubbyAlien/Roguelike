@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
 
     public Vector3Int position => agent.position;
 
+    private string expLogString;
+
     private void Awake() {
         attackManager.RegisterPlayer(this);
         attackManager.AttackExecuted += ProcessAttack;
@@ -44,7 +46,8 @@ public class PlayerController : MonoBehaviour
         rogueInstance = rogueDefinition.NewInstance();
         spriteRenderer.sprite = rogueDefinition.sprite;
 
-        interactionManager.UpdateHP(rogueInstance.currentHitPoints, rogueDefinition.baseHealth);
+        interactionManager.UpdateHP(rogueInstance.currentHitPoints, rogueInstance.maxHp);
+        interactionManager.UpdateEXP(rogueInstance.currentLevel);
     }
 
     private void Update() {
@@ -74,9 +77,13 @@ public class PlayerController : MonoBehaviour
     }
 
     private void AttackTile(Vector3Int tilePosition, string targetName) {
-        attackManager.StartPlayerAttack(tilePosition, rogueDefinition.baseAttack);
+        expLogString = "";
+        attackManager.StartPlayerAttack(tilePosition, rogueInstance.attack);
         TakeTurn();
-        interactionManager.SendToLog($"Attacked {targetName} for {rogueDefinition.baseAttack:0.0} points of damage.");
+        interactionManager.SendToLog($"Attacked {targetName} for {rogueInstance.attack:0.0} points of damage.");
+        if (expLogString.Length > 0) {
+            interactionManager.SendToLog(expLogString + $" ({rogueInstance.expUntilNextLevel:0} until next level up)");
+        }
     }
 
     private void TakeTurn() {
@@ -96,11 +103,22 @@ public class PlayerController : MonoBehaviour
         if (targetTile == agent.position) {
             dead = rogueInstance.TakeDamage(damage);
             interactionManager.LogDamage(rogueDefinition.name, damage);
-            interactionManager.UpdateHP(rogueInstance.currentHitPoints, rogueDefinition.baseHealth);
+            interactionManager.UpdateHP(rogueInstance.currentHitPoints, rogueInstance.maxHp);
             if (dead) {
                 spriteRenderer.enabled = false;
                 PlayerDied?.Invoke();
             }
+        }
+    }
+
+    public void OnEnemyDeath(EnemyDefinition enemyDefinition) {
+        if (rogueInstance.GainExperience(enemyDefinition.expOnDeath)) {
+            interactionManager.UpdateHP(rogueInstance.currentHitPoints, rogueInstance.maxHp);
+            interactionManager.UpdateEXP(rogueInstance.currentLevel);
+            expLogString += $"Reached level {rogueInstance.currentLevel}.";
+        }
+        else {
+            expLogString += $"Gained {enemyDefinition.expOnDeath} exp.";
         }
     }
 

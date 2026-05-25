@@ -10,14 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3b9a8004fec6f6d489959086ace35991, type: 3}
-  m_Name: Level1
+  m_Name: EndLevel
   m_EditorClassIdentifier: 
-  levelSize: {x: 4, y: 4}
-  length: 5
-  complexity: 0.7
-  enemyDensity: 0.6
-  roomsResourcePath: Level1Rooms
+  levelSize: {x: 1, y: 1}
+  length: 1
+  complexity: 0
+  enemyDensity: 0
+  roomsResourcePath: EndRoom
   floorTile: {fileID: 11400000, guid: 666bb4c1b2dac9141981aeea3a801fc7, type: 2}
   wallTile: {fileID: 11400000, guid: 37d80b26fdb0f794e957aa68d9783a0c, type: 2}
-  enemies:
-  - {fileID: 11400000, guid: 863f08af604f17948a43172c8ba569fd, type: 2}
+  enemies: []

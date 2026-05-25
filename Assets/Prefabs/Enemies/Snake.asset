@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Snake
   m_EditorClassIdentifier: 
   enemyName: Snake
+  expOnDeath: 5
   sprite: {fileID: 5811538498805445843, guid: fa88e3a3fd08860409b6833efbb4f024, type: 3}
-  hitPoints: 10
-  damage: 1
+  hitPoints: 20
+  damage: 2
   turnsPerPlayerTurn: 0.5
   attackDelay: 2
   behaviour: 0

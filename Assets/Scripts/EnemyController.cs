@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(TilemapAgent))]
 public class EnemyController : MonoBehaviour
 {
-    public event Action EnemyDied;
+    public event Action<EnemyDefinition> EnemyDied;
 
     [SerializeField]
     private SpriteRenderer spriteRenderer;
@@ -78,7 +78,7 @@ public class EnemyController : MonoBehaviour
             if (dead) {
                 spriteRenderer.enabled = false;
                 agent.RemoveDynamicBlocker();
-                EnemyDied?.Invoke();
+                EnemyDied?.Invoke(definition);
             }
         }
     }

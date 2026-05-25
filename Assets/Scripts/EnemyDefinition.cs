@@ -6,6 +6,8 @@ public class EnemyDefinition : ScriptableObject
     [SerializeField]
     private string enemyName;
     [SerializeField]
+    public float expOnDeath;
+    [SerializeField]
     public Sprite sprite;
     [SerializeField]
     private float hitPoints;

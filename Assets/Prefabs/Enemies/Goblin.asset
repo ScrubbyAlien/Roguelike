@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Goblin
   m_EditorClassIdentifier: 
   enemyName: Goblin
+  expOnDeath: 10
   sprite: {fileID: 2520108084128459728, guid: bfd54c74ae7a4514aa927911ada4c165, type: 3}
-  hitPoints: 20
-  damage: 3
+  hitPoints: 40
+  damage: 6
   turnsPerPlayerTurn: 0.7
   attackDelay: 1
   behaviour: 0

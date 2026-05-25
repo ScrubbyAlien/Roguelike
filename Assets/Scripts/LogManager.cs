@@ -10,7 +10,7 @@ public class LogManager : MonoBehaviour
     [SerializeField]
     private InteractionManager interactionManager;
     [SerializeField]
-    private TMP_Text logField, hpField;
+    private TMP_Text logField, hpField, expField, floorField;
     private List<string> turnLog;
     private int turnLogIndex;
     private List<Interaction> interactions;
@@ -65,6 +65,14 @@ public class LogManager : MonoBehaviour
 
     public void SetHP(float current, float max) {
         hpField.text = $"HP {current:0}/{max:0}";
+    }
+
+    public void SetEXP(int currentLevel) {
+        expField.text = $"Level {currentLevel}";
+    }
+
+    public void SetFloor(int floor) {
+        floorField.text = $"Floor {floor}";
     }
 
     public void Reset() {

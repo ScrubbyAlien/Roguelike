@@ -15,3 +15,6 @@ MonoBehaviour:
   sprite: {fileID: 6847130768412236191, guid: 15132b9e29ba03f47a7e7e9d7f4101cf, type: 3}
   baseHealth: 30
   baseAttack: 5
+  expPerLevel: 15
+  attackModifierPerLevel: 2
+  healthModifierPerLevel: 3

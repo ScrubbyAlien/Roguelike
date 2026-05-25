@@ -65,13 +65,18 @@ public class InteractionManager : ScriptableObject
         logManager.SetHP(current, max);
     }
 
+    public void UpdateEXP(int currentLevel) {
+        logManager.SetEXP(currentLevel);
+    }
+
     public void SendToLog(string log) {
         logManager.SendToLog(log);
     }
 
     public void QueueProgressLevelInteraction() {
         logManager.QueueInteraction("Go to next level?", () => {
-            levelManager.GoToNextLevel();
+            levelManager.GoToNextLevel(out int level);
+            logManager.SetFloor(level + 1);
             ResetLog();
             tileInformation = new();
         });

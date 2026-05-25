@@ -88,9 +88,9 @@ public class LevelGenerator
     }
 
     public void RandomizePath(int length, TileBase floor, TileBase wall) {
-        Assert.IsTrue(length > 1); // end room cannot be in starting room
         mainPath = new Vector2Int[length];
         mainPath[0] = startRoomPosition;
+        if (length == 1) return;
         for (int i = 0; i < length - 1; i++) {
             Vector2Int[] neighbours = mainPath[i].Neighbours().Where(
                 n => levelBounds.Contains((Vector3Int)n) && !mainPath.Contains(n)
@@ -106,6 +106,7 @@ public class LevelGenerator
     }
 
     public void AddSuperfluousPaths(float complexity, TileBase floor, TileBase wall) {
+        if (mainPath.Length == 1) return;
         List<Vector2Int> connectedRooms = mainPath.ToList();
         float levelArea = levelSize.x * levelSize.y;
         if ((connectedRooms.Count + 1) / levelArea > complexity) return;
@@ -142,7 +143,7 @@ public class LevelGenerator
     public void TrimUnreachableRooms() {
         List<Room.RoomInstance> rooms = new();
         foreach (Room.RoomInstance room in roomMatrix) {
-            if (!room.IsConnected()) room.ClearFromTileMap(tilemapManager);
+            if (!room.IsConnected() && room != startRoom) room.ClearFromTileMap(tilemapManager);
             else if (!rooms.Contains(room)) rooms.Add(room);
         }
         allRooms = rooms.ToArray();
@@ -158,6 +159,10 @@ public class LevelGenerator
                                                  .Where(r => r.numberEnemies > 0)
                                                  .Where(r => r != startRoom)
                                                  .ToList();
+        if (availableRooms.Count == 0) {
+            infos = Array.Empty<EnemySpawnInfo>();
+            return;
+        }
 
         for (int i = 0; i < enemyRooms && availableRooms.Count > 0; i++) {
             Room.RoomInstance room = availableRooms.RandomElement();
@@ -230,6 +235,4 @@ public class LevelGenerator
             return new Vector2Int(0, y);
         }
     }
-
-
 }
