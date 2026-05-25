@@ -1,0 +1,7 @@
+art:
+https://sethbb.itch.io/32rogues
+
+font:
+https://fontlibrary.org/en/font/courneuf-family#Courneuf-Regular
+
+music:

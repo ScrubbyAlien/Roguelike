@@ -125,5 +125,6 @@ public class PlayerController : MonoBehaviour
     public void Reset(TilemapManager manager) {
         agent.AssignTilemapManager(manager);
         dynamicEmitterIndex = lightMatrix.RegisterDynamicEmitter(agent.position);
+        lightMatrix.RefreshLight();
     }
 }

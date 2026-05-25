@@ -54,6 +54,8 @@ public class LevelManager : MonoBehaviour
             playerController.Initialize(spawnedPlayer, randomDefinition);
             cameraController.Initialize(playerController);
         }
+
+        playerController.PlayerDied += EndGame;
     }
 
     [Button]
@@ -108,6 +110,7 @@ public class LevelManager : MonoBehaviour
         Destroy(playerController.gameObject);
         playerController = null;
         currentLevel = 0;
+        interactionManager.UpdateFloor(currentLevel);
         interactionManager.ResetLog();
         Regenerate();
     }
