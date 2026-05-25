@@ -23,8 +23,6 @@ public class RogueDefinition : ScriptableObject
         public float expUntilNextLevel { get; private set; }
         public int currentLevel { get; private set; }
 
-        // todo: add rogue levels and a boss at the end
-        // todo: more rooms, more areas
         // todo: add menu and death state
         // todo: maybe load screen too
         // todo: ranged attacks if possible

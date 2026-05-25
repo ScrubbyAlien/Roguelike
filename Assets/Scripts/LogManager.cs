@@ -80,6 +80,7 @@ public class LogManager : MonoBehaviour
         turnLog.Clear();
         interactions.Clear();
         turnLogIndex = 0;
+        SetFloor(0);
     }
 
     public void QueueInteraction(string text, Action affirmation) {

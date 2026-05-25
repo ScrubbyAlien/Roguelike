@@ -65,6 +65,15 @@ public class LevelGenerator
             }
         }
 
+        Func<Vector2Int, Room, bool> fits = (position, room) => {
+            for (int x = position.x; x < position.x + room.sizeInGrid.x; x++) {
+                for (int y = position.y; y < position.y + room.sizeInGrid.y; y++) {
+                    if (roomMatrix[x, y] != null) return false;
+                }
+            }
+            return true;
+        };
+
         for (int x = 0; x < levelSize.x; x++) {
             for (int y = 0; y < levelSize.y; y++) {
                 // if this cell is occupied dont place anything
@@ -72,6 +81,12 @@ public class LevelGenerator
 
                 Vector2Int gridPosition = new Vector2Int(x, y);
                 Room randomRoom = GetRandomRoom(rooms, levelSize - gridPosition);
+                int iterations = 0;
+                while (!fits(gridPosition, randomRoom) && iterations < 30) {
+                    randomRoom = GetRandomRoom(rooms, levelSize - gridPosition);
+                    iterations += 1;
+                }
+                if (iterations == 30) continue;
                 Room.RoomInstance roomInstance = randomRoom.CreateInstance((Vector3Int)gridPosition);
                 roomInstance.PlaceInTileMap(tilemapManager);
 
@@ -101,7 +116,10 @@ public class LevelGenerator
 
         for (int i = 1; i < length; i++) {
             (Vector2Int room1Pos, Vector2Int room2Pos) = (mainPath[i - 1], mainPath[i]);
-            ConnectRooms(room1Pos, room2Pos, floor, wall);
+            if (!ConnectRooms(room1Pos, room2Pos, floor, wall)) {
+                Array.Resize(ref mainPath, i);
+                break;
+            }
         }
     }
 
@@ -112,12 +130,14 @@ public class LevelGenerator
         if ((connectedRooms.Count + 1) / levelArea > complexity) return;
 
         List<Vector2Int> neighbours = new();
+        List<(Vector2Int room1, Vector2Int room2)> invalid = new();
 
         Action<Vector2Int> addNeighbours = room => {
             foreach (Vector2Int neighbour in room.Neighbours()) {
                 if (!levelBounds.Contains((Vector3Int)neighbour)) continue;
                 if (connectedRooms.Contains(neighbour)) continue;
                 if (neighbours.Contains(neighbour)) continue;
+                if (invalid.Contains((room, neighbour))) continue;
                 neighbours.Add(neighbour);
             }
         };
@@ -130,13 +150,19 @@ public class LevelGenerator
         while ((connectedRooms.Count + 1) / levelArea < complexity) {
             if (neighbours.Count == 0) break;
             Vector2Int roomToConnect = neighbours.RandomElement();
-            Vector2Int connected = roomToConnect.Neighbours().Where(n => connectedRooms.Contains(n)).First();
+            Vector2Int[] candidates = roomToConnect.Neighbours().Where(n => connectedRooms.Contains(n)).ToArray();
+            if (candidates.Length == 0) continue;
+            Vector2Int connected = candidates.First();
 
             addNeighbours(roomToConnect);
             neighbours.Remove(roomToConnect);
             connectedRooms.Add(roomToConnect);
 
-            ConnectRooms(roomToConnect, connected, floor, wall);
+            if (!ConnectRooms(roomToConnect, connected, floor, wall)) {
+                connectedRooms.Remove(roomToConnect);
+                invalid.Add((roomToConnect, connected));
+                invalid.Add((connected, roomToConnect));
+            }
         }
     }
 

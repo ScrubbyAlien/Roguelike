@@ -58,6 +58,11 @@ public class TilemapManager : MonoBehaviour
         lightMatrix.RefreshLight(darknessMap);
     }
 
+    public bool CheckLevelValidity(Vector3Int spawnPosition) {
+        Path validPathToExit = new();
+        return FindPath(spawnPosition, exit, ref validPathToExit, obstacleMap.cellBounds, false, false, true);
+    }
+
     public Vector3Int WorldToCell(Vector3 worldPosition) {
         return grid.WorldToCell(worldPosition - offset);
     }
@@ -93,8 +98,9 @@ public class TilemapManager : MonoBehaviour
         disabledDynamicIndices.Add(index);
     }
 
-    public bool IsBlocked(Vector3Int cellPosition) {
+    public bool IsBlocked(Vector3Int cellPosition, bool ignoreDynamics = false) {
         bool staticObstacle = obstaclePositions.Contains(cellPosition);
+        if (ignoreDynamics) return staticObstacle;
         int indexOf = dynamicObstacles.IndexOf(cellPosition);
         bool dynamicObstacle = !disabledDynamicIndices.Contains(indexOf) && dynamicObstacles.Contains(cellPosition);
         return staticObstacle || dynamicObstacle;
@@ -175,7 +181,8 @@ public class TilemapManager : MonoBehaviour
                          ref Path path,
                          BoundsInt bounds,
                          bool connectRooms = false,
-                         bool log = false) {
+                         bool log = false,
+                         bool ignoreDynamics = false) {
         Dictionary<Vector3Int, Vector3Int[]> frontier = new(); // key: tile, value: path to tile
         HashSet<Vector3Int> vistited = new();
 
@@ -223,7 +230,8 @@ public class TilemapManager : MonoBehaviour
                 if (vistited.Contains(neighbour) || frontier.ContainsKey(neighbour)) continue;
                 else if (!bounds.Contains(neighbour)) continue;
                 else if (connectRooms && neighbour != to && ReadObstacleTile(neighbour)) continue;
-                else if (!connectRooms && neighbour != to && IsBlocked(neighbour)) continue;
+                else if (!connectRooms && neighbour != to &&
+                         (IsBlocked(neighbour, ignoreDynamics) || !IsFloor(neighbour))) continue;
 
                 Vector3Int[] pathToNeighbour = new Vector3Int[pathToNext.Length + 1];
                 for (int i = 0; i < pathToNext.Length; i++) {

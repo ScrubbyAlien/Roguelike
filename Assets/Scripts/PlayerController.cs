@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
     public void Warp(Vector3Int position, bool staticWarp = false) {
         agent.MoveToTile(position, false, staticWarp);
         if (!staticWarp) lightMatrix.UpdateDynamicEmitter(dynamicEmitterIndex, agent.position);
-        TakeTurn();
+        if (!staticWarp) TakeTurn();
         if (agent.tilemapManager.IsExit(position)) {
             interactionManager.QueueProgressLevelInteraction();
         }

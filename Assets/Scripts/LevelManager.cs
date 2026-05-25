@@ -41,9 +41,9 @@ public class LevelManager : MonoBehaviour
 
     private void SpawnPlayer(Vector3 position) {
         if (playerController) {
+            playerController.Reset(tilemapManager);
             playerController.Warp(Vector3Int.RoundToInt(position), true);
             cameraController.SetCameraPosition(playerController.position);
-            playerController.Reset(tilemapManager);
         }
         else {
             TilemapAgent spawnedPlayer = Instantiate(playerPrefab, position, Quaternion.identity);
@@ -74,6 +74,8 @@ public class LevelManager : MonoBehaviour
         Vector3Int staircasePosition = levelInfo.endRoom.floorPositions.RandomElement();
         tilemapManager.PlaceExit(staircasePosition, staircaseTile);
         Debug.Log($"Generated in {Time.realtimeSinceStartup - startTime:0.000} seconds.");
+        bool validLevel = tilemapManager.CheckLevelValidity(playerController.position);
+        if (!validLevel) Debug.LogError($"Level invalid, exit unreachable");
     }
 
     private void PlaceEnemies(LevelConfiguration.EnemySpawnInfo[] positions) {
@@ -102,5 +104,11 @@ public class LevelManager : MonoBehaviour
         level = currentLevel;
     }
 
-    private void EndGame() { }
+    private void EndGame() {
+        Destroy(playerController.gameObject);
+        playerController = null;
+        currentLevel = 0;
+        interactionManager.ResetLog();
+        Regenerate();
+    }
 }

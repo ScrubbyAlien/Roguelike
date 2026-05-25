@@ -54,6 +54,11 @@ public class Room : MonoBehaviour
         return (obstacle, light);
     }
 
+    public void CompressBounds() {
+        obstacles.CompressBounds();
+        lights.CompressBounds();
+    }
+
     [Button]
     private void Clear() {
         obstacles.ClearAllTiles();
@@ -88,6 +93,8 @@ public class Room : MonoBehaviour
             );
             roomReference = reference;
             spawnPoint = reference.spawnPoint + gridPositionOffset;
+
+            reference.CompressBounds();
 
             numberEnemies = Random.Range(reference.minMaxEnemies.x, reference.minMaxEnemies.y);
 
@@ -128,6 +135,7 @@ public class Room : MonoBehaviour
         }
 
         public void PlaceInTileMap(TilemapManager tilemapManager) {
+            roomReference.CompressBounds();
             if (exists) return;
             foreach ((Vector3Int roomPosition, Vector3Int levelPosition) in AllPositions()) {
                 tilemapManager.SetTiles(ReadTiles(roomPosition), levelPosition);
@@ -136,6 +144,7 @@ public class Room : MonoBehaviour
         }
 
         public void ClearFromTileMap(TilemapManager tilemapManager) {
+            roomReference.CompressBounds();
             if (!exists) return;
             foreach ((Vector3Int roomPosition, Vector3Int levelPosition) in AllPositions()) {
                 if (roomReference.obstacles.GetTile(roomPosition) || roomReference.lights.GetTile(roomPosition)) {
