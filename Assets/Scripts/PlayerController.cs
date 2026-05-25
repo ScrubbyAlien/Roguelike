@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(TilemapAgent))]
 public class PlayerController : MonoBehaviour
 {
-    public event Action PlayerConfirm;
     public event Action<Vector3Int> PlayerEarlyMove;
     public event Action<Vector3Int> PlayerMove;
     public event Action<Vector3Int> PlayerLateMove;
@@ -30,7 +29,6 @@ public class PlayerController : MonoBehaviour
     private RogueDefinition.RogueInstance rogueInstance;
 
     private InputAction move;
-    private InputAction confirm;
 
     public Vector3Int position => agent.position;
 
@@ -52,7 +50,6 @@ public class PlayerController : MonoBehaviour
     private void Update() {
         if (dead) return;
         move = InputSystem.actions.FindAction("Move");
-        confirm = InputSystem.actions.FindAction("Confirm");
         if (move.WasPressedThisFrame()) {
             Move(move.ReadValue<Vector2>());
         }
@@ -67,10 +64,13 @@ public class PlayerController : MonoBehaviour
         else Warp(newPosition);
     }
 
-    public void Warp(Vector3Int position) {
-        agent.MoveToTile(position);
-        lightMatrix.UpdateDynamicEmitter(dynamicEmitterIndex, agent.position);
+    public void Warp(Vector3Int position, bool staticWarp = false) {
+        agent.MoveToTile(position, false, staticWarp);
+        if (!staticWarp) lightMatrix.UpdateDynamicEmitter(dynamicEmitterIndex, agent.position);
         TakeTurn();
+        if (agent.tilemapManager.IsExit(position)) {
+            interactionManager.QueueProgressLevelInteraction();
+        }
     }
 
     private void AttackTile(Vector3Int tilePosition, string targetName) {
@@ -85,10 +85,6 @@ public class PlayerController : MonoBehaviour
         PlayerMove?.Invoke(agent.position);
         PlayerLateMove?.Invoke(agent.position);
         interactionManager.SendTileInfoToLog(agent.position);
-    }
-
-    public void Confirm() {
-        PlayerConfirm?.Invoke();
     }
 
     private void SetSpriteDirection(float xDirection) {
@@ -106,5 +102,10 @@ public class PlayerController : MonoBehaviour
                 PlayerDied?.Invoke();
             }
         }
+    }
+
+    public void Reset(TilemapManager manager) {
+        agent.AssignTilemapManager(manager);
+        dynamicEmitterIndex = lightMatrix.RegisterDynamicEmitter(agent.position);
     }
 }

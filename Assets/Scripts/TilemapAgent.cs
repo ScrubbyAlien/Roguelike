@@ -16,10 +16,10 @@ public class TilemapAgent : MonoBehaviour
         transform.position = tilemapManager.Snap(transform.position);
     }
 
-    public bool MoveToTile(Vector3Int newPosition, bool force = false) {
+    public bool MoveToTile(Vector3Int newPosition, bool force = false, bool staticWarp = false) {
         if (!force && tilemapManager.IsBlocked(newPosition)) return false;
         transform.position = tilemapManager.CellToWorld(newPosition);
-        tilemapManager.UpdateDynamicBlocker(dynamicObstacleIndex, newPosition);
+        if (!staticWarp) tilemapManager.UpdateDynamicBlocker(dynamicObstacleIndex, newPosition);
         return true;
     }
 

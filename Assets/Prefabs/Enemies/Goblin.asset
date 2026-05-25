@@ -9,9 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07d13c5ba5173a4448c4bcc3aa2ef107, type: 3}
-  m_Name: Assassin
+  m_Script: {fileID: 11500000, guid: c8116ff2d3f364047b0aa8e7a0e9f74a, type: 3}
+  m_Name: Goblin
   m_EditorClassIdentifier: 
-  sprite: {fileID: 6847130768412236191, guid: 15132b9e29ba03f47a7e7e9d7f4101cf, type: 3}
-  baseHealth: 30
-  baseAttack: 5
+  enemyName: Goblin
+  sprite: {fileID: 2520108084128459728, guid: bfd54c74ae7a4514aa927911ada4c165, type: 3}
+  hitPoints: 20
+  damage: 3
+  turnsPerPlayerTurn: 0.7
+  attackDelay: 1
+  behaviour: 0

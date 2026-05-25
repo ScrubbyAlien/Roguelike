@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Knight
   m_EditorClassIdentifier: 
   sprite: {fileID: 248234936431850608, guid: 15132b9e29ba03f47a7e7e9d7f4101cf, type: 3}
-  baseHealth: 20
-  baseAttack: 5
+  baseHealth: 40
+  baseAttack: 3

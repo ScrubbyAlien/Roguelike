@@ -447,7 +447,6 @@ MonoBehaviour:
   interactionManager: {fileID: 11400000, guid: eeeee7fc49646b849919d7c2c78ed2af, type: 2}
   logField: {fileID: 1572873241}
   hpField: {fileID: 1959089068}
-  turnLog: []
 --- !u!1 &260633594
 GameObject:
   m_ObjectHideFlags: 0
@@ -863,10 +862,14 @@ MonoBehaviour:
   startingLevel: 0
   levelConfigurations:
   - {fileID: 11400000, guid: 0d4a6aa908975b04098b664c33e0887e, type: 2}
+  - {fileID: 11400000, guid: d8aede3d95c4905499b64ce82a28931a, type: 2}
+  - {fileID: 11400000, guid: 3aef903e3ae8fec4bb4f20500af143d9, type: 2}
   tilemapManager: {fileID: 1402745942}
   cameraController: {fileID: 1608854429}
   playerPrefab: {fileID: 1969858597929189449, guid: 006ad22698bcbee4d8c978424ca2f4c7, type: 3}
   enemyPrefab: {fileID: -2026509862088882211, guid: e8a65904c8a8cf146b49139abfe8eaff, type: 3}
+  staircaseTile: {fileID: 11400000, guid: 8cacb56c5eaa67f44aff304a95d76cf0, type: 2}
+  interactionManager: {fileID: 11400000, guid: eeeee7fc49646b849919d7c2c78ed2af, type: 2}
   defintions:
   - {fileID: 11400000, guid: c32954c651379e94182ed754ba16fbc9, type: 2}
   - {fileID: 11400000, guid: d244a3c785f9f824899190eb5900dad1, type: 2}

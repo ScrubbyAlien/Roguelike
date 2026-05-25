@@ -8,6 +8,7 @@ public class InteractionManager : ScriptableObject
 {
     private Dictionary<Vector3Int, List<string>> tileInformation;
     private LogManager logManager;
+    private LevelManager levelManager;
 
     private void OnEnable() {
         tileInformation = new();
@@ -16,6 +17,10 @@ public class InteractionManager : ScriptableObject
 
     public void RegisterLogManager(LogManager logManager) {
         this.logManager = logManager;
+    }
+
+    public void RegisterLevelManager(LevelManager levelManager) {
+        this.levelManager = levelManager;
     }
 
     public int AddTileInformation(Vector3Int tile, string information) {
@@ -64,13 +69,15 @@ public class InteractionManager : ScriptableObject
         logManager.SendToLog(log);
     }
 
-    public void ResetLog() {
-        logManager.Reset();
+    public void QueueProgressLevelInteraction() {
+        logManager.QueueInteraction("Go to next level?", () => {
+            levelManager.GoToNextLevel();
+            ResetLog();
+            tileInformation = new();
+        });
     }
 
-    private class Interaction
-    {
-        public string text;
-        public Action affirmation;
+    public void ResetLog() {
+        logManager.Reset();
     }
 }

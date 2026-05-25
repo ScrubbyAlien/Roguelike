@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
 public class LevelManager : MonoBehaviour
@@ -20,6 +21,10 @@ public class LevelManager : MonoBehaviour
     private TilemapAgent playerPrefab;
     [SerializeField]
     private EnemyController enemyPrefab;
+    [SerializeField]
+    private TileBase staircaseTile;
+    [SerializeField]
+    private InteractionManager interactionManager;
 
     private PlayerController playerController;
     private List<EnemyController> enemies;
@@ -29,19 +34,26 @@ public class LevelManager : MonoBehaviour
 
     private void Start() {
         enemies = new();
+        currentLevel = startingLevel;
+        interactionManager.RegisterLevelManager(this);
         Regenerate();
     }
 
     private void SpawnPlayer(Vector3 position) {
-        if (playerController) Destroy(playerController.gameObject);
+        if (playerController) {
+            playerController.Warp(Vector3Int.RoundToInt(position), true);
+            cameraController.SetCameraPosition(playerController.position);
+            playerController.Reset(tilemapManager);
+        }
+        else {
+            TilemapAgent spawnedPlayer = Instantiate(playerPrefab, position, Quaternion.identity);
+            playerController = spawnedPlayer.GetComponent<PlayerController>();
+            spawnedPlayer.AssignTilemapManager(tilemapManager);
 
-        TilemapAgent spawnedPlayer = Instantiate(playerPrefab, position, Quaternion.identity);
-        playerController = spawnedPlayer.GetComponent<PlayerController>();
-        spawnedPlayer.AssignTilemapManager(tilemapManager);
-
-        RogueDefinition randomDefinition = defintions.RandomElement();
-        playerController.Initialize(spawnedPlayer, randomDefinition);
-        cameraController.Initialize(playerController);
+            RogueDefinition randomDefinition = defintions.RandomElement();
+            playerController.Initialize(spawnedPlayer, randomDefinition);
+            cameraController.Initialize(playerController);
+        }
     }
 
     [Button]
@@ -49,7 +61,6 @@ public class LevelManager : MonoBehaviour
         if (!Application.isPlaying) return;
         float startTime = Time.realtimeSinceStartup;
         tilemapManager.Reset();
-        currentLevel = startingLevel;
         levelConfigurations[currentLevel].GenerateLevel(
             tilemapManager,
             out Vector3 spawnPosition,
@@ -60,6 +71,8 @@ public class LevelManager : MonoBehaviour
         PlaceEnemies(enemySpawnInfos);
         tilemapManager.levelInfo = levelInfo;
         tilemapManager.enemies = enemies;
+        Vector3Int staircasePosition = levelInfo.endRoom.floorPositions.RandomElement();
+        tilemapManager.PlaceExit(staircasePosition, staircaseTile);
         Debug.Log($"Generated in {Time.realtimeSinceStartup - startTime:0.000} seconds.");
     }
 
@@ -77,5 +90,10 @@ public class LevelManager : MonoBehaviour
         EnemyController enemy = Instantiate(enemyPrefab, worldPosition, Quaternion.identity);
         enemy.Initialize(enemySpawnInfo.definition, playerController, tilemapManager);
         enemies.Add(enemy);
+    }
+
+    public void GoToNextLevel() {
+        currentLevel += 1;
+        Regenerate();
     }
 }

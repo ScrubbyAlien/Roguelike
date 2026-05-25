@@ -30,6 +30,8 @@ public class TilemapManager : MonoBehaviour
     public LevelGenerator.LevelInfo levelInfo;
     public List<EnemyController> enemies;
 
+    private Vector3Int exit;
+
     private void OnDrawGizmos() {
         Gizmos.DrawWireSphere(Vector3.zero, 0.3f);
         // Gizmos.DrawWireSphere((Vector2)designatedSize, 0.3f);
@@ -43,6 +45,9 @@ public class TilemapManager : MonoBehaviour
         obstacleMap.ClearAllTiles();
         lightMap.ClearAllTiles();
         darknessMap.ClearAllTiles();
+
+        if (dynamicObstacles != null) dynamicObstacles.Clear();
+        if (disabledDynamicIndices != null) disabledDynamicIndices.Clear();
 
         lightMatrix.OnEnable();
     }
@@ -117,6 +122,16 @@ public class TilemapManager : MonoBehaviour
 
     public void SetHighlightTile(TileBase tile, Vector3Int cell) {
         highlightMap.SetTile(cell, tile);
+    }
+
+    public void PlaceExit(Vector3Int position, TileBase exit) {
+        Vector3Int adjustedPosition = new Vector3Int(position.x, position.y, 1);
+        obstacleMap.SetTile(adjustedPosition, exit);
+        this.exit = position;
+    }
+
+    public bool IsExit(Vector3Int position) {
+        return exit == position;
     }
 
     public TileBase ReadObstacleTile(Vector3Int position) {

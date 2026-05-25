@@ -61,7 +61,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstacleMatrix: {fileID: 11400000, guid: 06aae2c8b92a94342abba6faa42bdbe3, type: 2}
   sizeInGrid: {x: 1, y: 1}
-  minMaxEnemies: {x: 1, y: 3}
+  minMaxEnemies: {x: 2, y: 4}
   exits:
   - {x: 7, y: 3, z: 0}
   - {x: 14, y: 12, z: 0}

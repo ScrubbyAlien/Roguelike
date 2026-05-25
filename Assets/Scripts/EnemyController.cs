@@ -14,6 +14,8 @@ public class EnemyController : MonoBehaviour
     private EnemyDefinition definition;
     private EnemyDefinition.EnemyInstance instance;
 
+    private PlayerController playerController;
+
     public string enemyName => instance.name;
 
     [HideInInspector]
@@ -31,6 +33,11 @@ public class EnemyController : MonoBehaviour
         attackManager.AttackExecuted += ProcessAttack;
     }
 
+    private void OnDestroy() {
+        playerController.PlayerMove -= TakeTurn;
+        attackManager.AttackExecuted -= ProcessAttack;
+    }
+
     public void Initialize(
         EnemyDefinition definition,
         PlayerController playerController,
@@ -39,7 +46,10 @@ public class EnemyController : MonoBehaviour
         this.definition = definition;
         this.instance = definition.NewInstance();
 
+        spriteRenderer.sprite = definition.sprite;
+
         agent.AssignTilemapManager(tilemapManager);
+        this.playerController = playerController;
         playerController.PlayerMove += TakeTurn;
 
         enemyPath = new();
