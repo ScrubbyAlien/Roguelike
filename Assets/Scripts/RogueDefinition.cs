@@ -23,10 +23,6 @@ public class RogueDefinition : ScriptableObject
         public float expUntilNextLevel { get; private set; }
         public int currentLevel { get; private set; }
 
-        // todo: add menu and death state
-        // todo: maybe load screen too
-        // todo: ranged attacks if possible
-
         public RogueInstance(RogueDefinition definition) {
             this.definition = definition;
             currentLevel = 0;

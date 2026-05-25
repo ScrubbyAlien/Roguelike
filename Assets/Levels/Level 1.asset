@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b9a8004fec6f6d489959086ace35991, type: 3}
   m_Name: Level 1
   m_EditorClassIdentifier: 
-  levelSize: {x: 4, y: 4}
-  length: 5
-  complexity: 0.7
+  levelSize: {x: 3, y: 3}
+  length: 3
+  complexity: 0.5
   enemyDensity: 0.6
-  roomsResourcePath: Level1Rooms
+  roomsResourcePath: TileRooms
   floorTile: {fileID: 11400000, guid: 666bb4c1b2dac9141981aeea3a801fc7, type: 2}
   wallTile: {fileID: 11400000, guid: 37d80b26fdb0f794e957aa68d9783a0c, type: 2}
   enemies:

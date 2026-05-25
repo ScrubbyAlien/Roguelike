@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelSize: {x: 5, y: 5}
   length: 12
-  complexity: 0.7
+  complexity: 0.8
   enemyDensity: 0.8
-  roomsResourcePath: Level2Rooms
-  floorTile: {fileID: 11400000, guid: 666bb4c1b2dac9141981aeea3a801fc7, type: 2}
-  wallTile: {fileID: 11400000, guid: 37d80b26fdb0f794e957aa68d9783a0c, type: 2}
+  roomsResourcePath: BoneRooms
+  floorTile: {fileID: 11400000, guid: 312674c3706dbb142b2f78964b6ab399, type: 2}
+  wallTile: {fileID: 11400000, guid: de20d06535320a64ab19aa6289b04a1d, type: 2}
   enemies:
-  - {fileID: 11400000, guid: 863f08af604f17948a43172c8ba569fd, type: 2}
+  - {fileID: 11400000, guid: 22e7eb318240e7e4cbafb377879231da, type: 2}
   - {fileID: 11400000, guid: 07eb4ac189df54c4dbb2ca512098be81, type: 2}
   - {fileID: 11400000, guid: de4e907b7d555414f82e91afdd880d1b, type: 2}
-  - {fileID: 11400000, guid: 22e7eb318240e7e4cbafb377879231da, type: 2}
-  - {fileID: 11400000, guid: 22e7eb318240e7e4cbafb377879231da, type: 2}
-  - {fileID: 11400000, guid: 22e7eb318240e7e4cbafb377879231da, type: 2}
-  - {fileID: 11400000, guid: 22e7eb318240e7e4cbafb377879231da, type: 2}
+  - {fileID: 11400000, guid: 6fa404f34d84e094b87984ff3f83d0df, type: 2}
+  - {fileID: 11400000, guid: 6fa404f34d84e094b87984ff3f83d0df, type: 2}
+  - {fileID: 11400000, guid: 45047d56d75bdec41be3976ec9bac7eb, type: 2}
+  - {fileID: 11400000, guid: 45047d56d75bdec41be3976ec9bac7eb, type: 2}
   music: {fileID: 8300000, guid: 482560cc92ca74d4fa0ddd86ce64b029, type: 3}
   volume: 0.654

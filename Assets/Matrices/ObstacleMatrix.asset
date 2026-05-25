@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: ObstacleMatrix
   m_EditorClassIdentifier: 
   obstacleTiles:
-  - {fileID: 11400000, guid: 37d80b26fdb0f794e957aa68d9783a0c, type: 2}
+  - {fileID: 11400000, guid: de20d06535320a64ab19aa6289b04a1d, type: 2}
+  - {fileID: 11400000, guid: 08853791c2846b64598ec4ed367d1b82, type: 2}
   - {fileID: 11400000, guid: cccf4c8f17b487e41b53326abae6d094, type: 2}
   - {fileID: 11400000, guid: 5222a7d0deb6b6043b6c883c19f41540, type: 2}
   - {fileID: 11400000, guid: ee34869617cb2de409413e52c43f14d5, type: 2}
@@ -52,3 +53,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 98e93ce6a769d1649ae993d943e423f2, type: 2}
   - {fileID: 11400000, guid: 5fb6550ae9adbe44ea1793eb6b1a9679, type: 2}
   - {fileID: 11400000, guid: 0e65f4e6ad72b13459519bbd5c961ab1, type: 2}
+  - {fileID: 11400000, guid: 37d80b26fdb0f794e957aa68d9783a0c, type: 2}

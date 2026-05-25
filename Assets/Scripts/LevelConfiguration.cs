@@ -32,6 +32,7 @@ public class LevelConfiguration : ScriptableObject
         out EnemySpawnInfo[] enemySpawnInfos,
         out LevelGenerator.LevelInfo levelInfo
     ) {
+        Debug.Log(roomsResourcePath);
         rooms = Resources.LoadAll<Room>(roomsResourcePath);
         LevelGenerator levelGenerator = new LevelGenerator(tilemapManager, levelSize);
 

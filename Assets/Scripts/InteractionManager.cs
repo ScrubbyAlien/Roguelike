@@ -44,7 +44,9 @@ public class InteractionManager : ScriptableObject
     }
 
     public void RemoveTileInformation(Vector3Int tile, int index) {
-        tileInformation[tile][index] = "";
+        if (tileInformation.TryGetValue(tile, out List<string> infos)) {
+            infos[index] = "";
+        }
     }
 
     public string[] GetTileInformation(Vector3Int tile) {
