@@ -56,7 +56,7 @@ public class LogManager : MonoBehaviour
     private void ShowLog() {
         logField.text = turnLog[turnLogIndex];
         if (interactions.Select(i => i.logIndex).Contains(turnLogIndex)) {
-            logField.text += "[(C)onfirm]";
+            logField.text += " [(C)onfirm]";
         }
         if (turnLog.Count > 1) {
             logField.text += " [(B)rowse]";

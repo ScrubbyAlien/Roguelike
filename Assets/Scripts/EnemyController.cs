@@ -10,6 +10,8 @@ public class EnemyController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     [SerializeField]
     private AttackManager attackManager;
+    [SerializeField]
+    private LightMatrix lightMatrix;
 
     private EnemyDefinition definition;
     private EnemyDefinition.EnemyInstance instance;
@@ -23,19 +25,22 @@ public class EnemyController : MonoBehaviour
 
     public TilemapManager.Path enemyPath;
 
-    // [SerializeField]
-    // public bool logActions;
+    [SerializeField]
+    public bool logActions;
 
+    [HideInInspector]
     public bool dead;
 
     private void Awake() {
         agent = GetComponent<TilemapAgent>();
         attackManager.AttackExecuted += ProcessAttack;
+        lightMatrix.OnRefreshLight += SetVisiblity;
     }
 
     private void OnDestroy() {
         playerController.PlayerMove -= TakeTurn;
         attackManager.AttackExecuted -= ProcessAttack;
+        lightMatrix.OnRefreshLight -= SetVisiblity;
     }
 
     public void Initialize(
@@ -64,11 +69,17 @@ public class EnemyController : MonoBehaviour
         Vector3Int direction = toPosition - agent.position;
         SetSpriteDirection(direction.x);
         agent.MoveToTile(toPosition);
+        SetVisiblity();
     }
 
     private void SetSpriteDirection(float xDirection) {
         if (xDirection < 0) spriteRenderer.flipX = false;
         if (xDirection > 0) spriteRenderer.flipX = true;
+    }
+
+    private void SetVisiblity() {
+        if (dead) return;
+        spriteRenderer.enabled = !lightMatrix.InDarkness(agent.position);
     }
 
     private void ProcessAttack(Vector3Int targetTile, float damage) {

@@ -126,7 +126,7 @@ public class LightMatrix : ScriptableObject
     }
 
     public bool InDarkness(Vector3Int position) {
-        return GetLightValue(position) < cutoff;
+        return GetLightValue(position) == 0;
     }
 
     private void LogLightValues(int length) {

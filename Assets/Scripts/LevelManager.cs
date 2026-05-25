@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
@@ -32,11 +33,20 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private RogueDefinition[] defintions;
 
+    private InputAction quit;
+
     private void Start() {
         enemies = new();
         currentLevel = startingLevel;
         interactionManager.RegisterLevelManager(this);
         Regenerate();
+    }
+
+    private void Update() {
+        quit = InputSystem.actions.FindAction("Quit");
+        if (quit.WasPressedThisFrame()) {
+            interactionManager.QueueQuitToMenuInteraction();
+        }
     }
 
     private void SpawnPlayer(Vector3 position) {
@@ -70,6 +80,7 @@ public class LevelManager : MonoBehaviour
             out LevelGenerator.LevelInfo levelInfo
         );
         SpawnPlayer(spawnPosition);
+        playerController.RefreshLight();
         PlaceEnemies(enemySpawnInfos);
         tilemapManager.levelInfo = levelInfo;
         tilemapManager.enemies = enemies;
@@ -98,6 +109,7 @@ public class LevelManager : MonoBehaviour
     }
 
     public void GoToNextLevel(out int level) {
+        interactionManager.ResetLog();
         currentLevel += 1;
         if (currentLevel == levelConfigurations.Length) {
             EndGame();
@@ -106,12 +118,8 @@ public class LevelManager : MonoBehaviour
         level = currentLevel;
     }
 
-    private void EndGame() {
-        Destroy(playerController.gameObject);
-        playerController = null;
-        currentLevel = 0;
-        interactionManager.UpdateFloor(currentLevel);
-        interactionManager.ResetLog();
-        Regenerate();
+    public void EndGame() {
+        MusicManager.instance.TransitionMusic(MainMenu.mainMenuClip, 1f);
+        MainMenu.LoadScene("MainMenu");
     }
 }

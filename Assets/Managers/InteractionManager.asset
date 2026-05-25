@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a036f732140d6c34c8274708e6fd536e, type: 3}
   m_Name: InteractionManager
   m_EditorClassIdentifier: 
+  attackManager: {fileID: 11400000, guid: 2a4aff98f0f247445b4e8281a2cd8faf, type: 2}

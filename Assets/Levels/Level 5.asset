@@ -27,3 +27,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 22e7eb318240e7e4cbafb377879231da, type: 2}
   - {fileID: 11400000, guid: 22e7eb318240e7e4cbafb377879231da, type: 2}
   - {fileID: 11400000, guid: 22e7eb318240e7e4cbafb377879231da, type: 2}
+  music: {fileID: 8300000, guid: 482560cc92ca74d4fa0ddd86ce64b029, type: 3}
+  volume: 0.654

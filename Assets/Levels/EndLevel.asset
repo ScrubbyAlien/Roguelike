@@ -20,3 +20,5 @@ MonoBehaviour:
   floorTile: {fileID: 11400000, guid: 666bb4c1b2dac9141981aeea3a801fc7, type: 2}
   wallTile: {fileID: 11400000, guid: 37d80b26fdb0f794e957aa68d9783a0c, type: 2}
   enemies: []
+  music: {fileID: 8300000, guid: 1a612cd656fcd5647ae7fe095322e386, type: 3}
+  volume: 1

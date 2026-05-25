@@ -76,6 +76,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void RefreshLight() {
+        lightMatrix.UpdateDynamicEmitter(dynamicEmitterIndex, agent.position);
+    }
+
     private void AttackTile(Vector3Int tilePosition, string targetName) {
         expLogString = "";
         attackManager.StartPlayerAttack(tilePosition, rogueInstance.attack);

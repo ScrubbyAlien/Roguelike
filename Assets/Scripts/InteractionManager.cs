@@ -10,6 +10,9 @@ public class InteractionManager : ScriptableObject
     private LogManager logManager;
     private LevelManager levelManager;
 
+    [SerializeField]
+    private AttackManager attackManager;
+
     private void OnEnable() {
         tileInformation = new();
         logManager = null;
@@ -79,11 +82,16 @@ public class InteractionManager : ScriptableObject
 
     public void QueueProgressLevelInteraction() {
         logManager.QueueInteraction("Go to next level?", () => {
+            tileInformation = new();
+            attackManager.ClearAttacks();
             levelManager.GoToNextLevel(out int level);
             UpdateFloor(level);
             ResetLog();
-            tileInformation = new();
         });
+    }
+
+    public void QueueQuitToMenuInteraction() {
+        logManager.QueueInteraction("Exit to main menu?", () => { levelManager.EndGame(); });
     }
 
     public void ResetLog() {

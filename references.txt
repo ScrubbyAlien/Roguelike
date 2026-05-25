@@ -5,3 +5,10 @@ font:
 https://fontlibrary.org/en/font/courneuf-family#Courneuf-Regular
 
 music:
+https://opengameart.org/content/dungeon-ambience
+https://opengameart.org/content/dark-dungeon-ambience
+https://opengameart.org/content/rpg-ambience-dungeon
+https://opengameart.org/content/theentrance
+https://opengameart.org/content/into-the-ruined-temple
+https://opengameart.org/content/dungeon-themes
+https://opengameart.org/content/dark-theme

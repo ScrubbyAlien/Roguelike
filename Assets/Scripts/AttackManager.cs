@@ -26,6 +26,14 @@ public class AttackManager : ScriptableObject
         attacks = new();
     }
 
+    public void ClearAttacks() {
+        foreach (Attack attack in attacks) {
+            tilemapManager.SetHighlightTile(null, attack.targetTile);
+            interactionManager.RemoveTileInformation(attack.targetTile, attack.tileInformationIndex);
+        }
+        attacks.Clear();
+    }
+
     public void RegisterPlayer(PlayerController playerController) {
         this.playerController = playerController;
         playerController.PlayerEarlyMove += OnTakeTurn;

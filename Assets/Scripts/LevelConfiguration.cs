@@ -19,6 +19,11 @@ public class LevelConfiguration : ScriptableObject
     private TileBase floorTile, wallTile;
     [SerializeField]
     private EnemyDefinition[] enemies;
+    [SerializeField]
+    private AudioClip music;
+    [SerializeField, Range(0f, 1f)]
+    private float volume;
+
     private Room[] rooms;
 
     public void GenerateLevel(
@@ -41,6 +46,7 @@ public class LevelConfiguration : ScriptableObject
 
         spawnPosition = (Vector3)spawnPoint;
         levelInfo = levelGenerator.GetLevelInfo();
+        if (music) MusicManager.instance.TransitionMusic(music, 1f, volume);
     }
 
     public struct EnemySpawnInfo

@@ -22,3 +22,5 @@ MonoBehaviour:
   enemies:
   - {fileID: 11400000, guid: 863f08af604f17948a43172c8ba569fd, type: 2}
   - {fileID: 11400000, guid: 07eb4ac189df54c4dbb2ca512098be81, type: 2}
+  music: {fileID: 8300000, guid: 36f1843940f961944a6e17a22445249a, type: 3}
+  volume: 1
